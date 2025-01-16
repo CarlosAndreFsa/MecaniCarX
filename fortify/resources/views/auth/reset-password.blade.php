@@ -7,7 +7,7 @@
             <form action="{{ route('password.update')}}" method="post">
                 @csrf
                 <p class="display-6 text-center">REDEFENIR SENHA</p>
-<input type="hidden" value="{{ route('') }}">
+<input type="hidden" name="token" value="{{$request->route('token') }}">
                 <div class="mb-3">
                     <label for="email">Email</label>
                     <input type="email" name="email" id="email" class="form-control">
