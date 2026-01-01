@@ -1,0 +1,84 @@
+{
+    "serviceName": "CRUDServiceProvider.loadRecords",
+    "status": "1",
+    "pendingPrinting": "false",
+    "transactionId": "018BA3E66D04B4EC24815FC8A0435F12",
+    "responseBody": {
+        "entities": {
+            "total": "1",
+            "hasMoreResult": "false",
+            "offsetPage": "0",
+            "offset": "0",
+            "metadata": {
+                "fields": {
+                    "field": [
+                        {
+                            "name": "CODEMP"
+                        },
+                        {
+                            "name": "RAZAOSOCIAL"
+                        },
+                        {
+                            "name": "NOMEFANTASIA"
+                        },
+                        {
+                            "name": "CGC"
+                        },
+                        {
+                            "name": "INSCESTAD"
+                        }
+                    ]
+                }
+            },
+            "entity":[ 
+                {
+                "f0": {
+                    "$": "1"
+                },
+                "f1": {
+                    "$": "FABMED DISTRIBUIDORA"
+                },
+                "f2": {
+                    "$": "FABMED"
+                },
+                "f3": {
+                    "$": "13830597134"
+                },
+                "f4": {
+                    "$": "07395207000151"
+                },
+                "f0": {
+                    "$": "2"
+                },
+                "f1": {
+                    "$": "MS HOSPITALAR"
+                },
+                "f2": {
+                    "$": "MS HOSP"
+                },
+                "f3": {
+                    "$": "13830597134"
+                },
+                "f4": {
+                    "$": "07395207000151"
+                },
+                "f0": {
+                    "$": "3"
+                },
+                "f1": {
+                    "$": "ZUCK PAPEIS"
+                },
+                "f2": {
+                    "$": "ZUCK"
+                },
+                "f3": {
+                    "$": "13830597134"
+                },
+                "f4": {
+                    "$": "07395207000151"
+                }
+            }
+        ]
+        }
+    }
+}
