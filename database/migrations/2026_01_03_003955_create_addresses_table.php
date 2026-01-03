@@ -16,7 +16,7 @@ return new class extends Migration
             $table->morphs('addressable');
             $table->string('street')->nullable();
             $table->string('number')->nullable();
-            $table->string('complemnt')->nullable();
+            $table->string('complement')->nullable();
             $table->string('district')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
