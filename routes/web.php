@@ -4,11 +4,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
-Route::middleware(['auth', 'company', 'active', 'role:admin,employee'])->group(function(){
-    Route::get('/dashboard', function(){
-        return view('dashboard');
-    })->name('dashboard');
-});
+Route::middleware(['auth', 'company', 'active', 'role:admin,employee'])
+    ->get('/dashboard', function(){
+        return view('dashboard.index');
+
+    })
+        ->name('dashboard');
+
 
 // Route::middleware(['auth', 'company'])->get('/company-test', function () {
 //     return response()->json(['ok' => true]);
