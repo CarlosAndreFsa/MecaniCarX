@@ -1,14 +1,12 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
 Route::middleware(['auth', 'company', 'active', 'role:admin,employee'])
-    ->get('/dashboard', function(){
-        return view('dashboard.index');
-
-    })
+    ->get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
 

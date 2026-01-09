@@ -4,11 +4,11 @@
     </h1>
     
     @if (auth()->user()->role === 'admin')
-        @include('dashboard.admin')
+        @include('dashboards.admin')
     @elseif(auth()->user()->role === 'employee')
-        @include('dashboard.employee')
+        @include('dashboards.employee')
     @elseif(auth()->user()->role === 'client')
-        @include('dashboard.client')
+        @include('dashboards.client')
     @else
         <p>Role não encontrada: </p>
         <p>{{auth()->user()->role;}}</p>
