@@ -14,4 +14,9 @@
             </div>
         </div>
     </div>
+     @if(auth()->user()->role === 'admin')
+        @include('dashboards.admin')
+    @elseif(auth()->user()->role === 'employee')
+        @include('dashboards.employee')
+    @endif
 </x-app-layout>

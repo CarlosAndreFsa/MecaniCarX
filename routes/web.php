@@ -8,7 +8,7 @@ Route::view('/', 'welcome');
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
-Route::get('\users', UserController::class,'index')->name('users.index');
+Route::get('/users', [UserController::class,'index'])->name('users.index');
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');

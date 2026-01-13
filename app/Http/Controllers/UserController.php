@@ -12,7 +12,7 @@ class UserController extends Controller
         $users = User::where('company_id', $request->user()->company_id)
             ->where('role', '!=', 'client')
             ->get();
-dd($users);
+
             return view('users.index', compact('users'));
 
     }
