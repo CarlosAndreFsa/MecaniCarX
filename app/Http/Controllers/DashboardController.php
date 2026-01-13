@@ -13,24 +13,30 @@ class DashboardController extends Controller
         $user = $request->user();
         $companyId = $user->company_id;
  
-        return match ($user->role){
-            'admin' => view('dashboards.admin', [
-                'employeesCount' => User::where('company_id', $companyId)
-                ->where('role', 'employee')
-                ->count(),
-            ]),
-
-            'clientsCount' => User::where('company_id', $companyId)
-            ->where('role', 'client')
+        $data =[
+             'usersCount' => User::where('company_id', $companyId)
             ->count(),
 
-            'usersCount' => User::where('company_id', $companyId)
-            ->count(),
+        ];
+        if($user->role  === 'admin'){
+            $data['employeesCount'] = $user::where('company_id', $companyId)
+            ->where('role', 'employee')
+            ->count();
 
-            'employee' => view('dashboards.employee'),
-            'client' => view('dashboards.client'),
+            $data['clientsCount'] = User::where('company_id', $companyId)
+                ->where('role', 'client')
+                ->count();
 
-            default  => abort(403),        
-        };
+            return view('dashboards.admin', $data);
+        }
+        if ($user->role === 'employee') {
+            return view('dashboards.employee', $data);
+        }
+
+        if ($user->role === 'client') {
+            return view('dashboards.client', $data);
+        }
+
+        abort(403);
     }
 }

@@ -9,12 +9,12 @@
 
         <div class="p-4 bg-white shadow rounded">
             <p class="text-gray-500 text-sm">Funcionários</p>
-            <p class="text-2xl font-bold"></p>
+            <p class="text-2xl font-bold">{{ $usersCount ?? 0 }}</p>
         </div>
 
         <div class="p-4 bg-white shadow rounded">
             <p class="text-gray-500 text-sm">Clientes</p>
-            <p class="text-2xl font-bold">0</p>
+            <p class="text-2xl font-bold">{{ $employeesCount ?? 0 }}</p>
         </div>
 
         <div class="p-4 bg-white shadow rounded">
