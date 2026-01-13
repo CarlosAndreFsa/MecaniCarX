@@ -1,4 +1,5 @@
-<div class="space-y-6">
+<x-app-layout>
+    <div class="space-y-6">
 
     <h2 class="text-xl font-semibold">
         Painel do Funcionário
@@ -24,3 +25,4 @@
     </div>
 
 </div>
+</x-app-layout>

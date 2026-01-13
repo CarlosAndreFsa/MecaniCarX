@@ -1,4 +1,5 @@
-<div class="space-y-6">
+<x-app-layout>
+    <div class="space-y-6">
 
     <h2 class="text-xl font-semibold">
         Painel do Administrador
@@ -8,7 +9,7 @@
 
         <div class="p-4 bg-white shadow rounded">
             <p class="text-gray-500 text-sm">Funcionários</p>
-            <p class="text-2xl font-bold">0</p>
+            <p class="text-2xl font-bold"></p>
         </div>
 
         <div class="p-4 bg-white shadow rounded">
@@ -43,3 +44,4 @@
     </div>
 
 </div>
+</x-app-layout>
