@@ -1,14 +1,19 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-Route::get('/users', [UserController::class,'index'])->name('users.index');
+Route::middleware(['auth', 'company','active'])->get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
+   
+    Route::get('/users', [UserController::class,'index'])->name('users.index');
+    
+});
+
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
