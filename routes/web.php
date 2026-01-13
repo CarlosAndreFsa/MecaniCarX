@@ -11,6 +11,10 @@ Route::middleware(['auth', 'company','active'])->get('dashboard', [DashboardCont
 Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
    
     Route::get('/users', [UserController::class,'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class,'create'])->name('users.create');
+    Route::get('/users/store', [UserController::class,'store'])->name('users.store');
+    Route::get('/users/{user}/edit', [UserController::class,'edit'])->name('users.edit');
+    Route::get('/users/{user}', [UserController::class,'update'])->name('users.update');
     
 });
 
