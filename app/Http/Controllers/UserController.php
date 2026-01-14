@@ -17,6 +17,7 @@ class UserController extends Controller
             return view('users.index', compact('users'));
 
     }
+    
      public function create()
      {
         return view('users.create');
@@ -25,10 +26,11 @@ class UserController extends Controller
 
      public function store(Request $request)
     {
+       
         $data = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'role' => 'required|in:admin,employee',
+            'role' => 'required|in:admin,employee,client',
         ]);
 
         User::create([
@@ -36,6 +38,7 @@ class UserController extends Controller
             'company_id' => $request->user()->company_id,
             'password' => Hash::make('password'),
             'active' => true,
+
         ]);
 
         return redirect()->route('users.index');

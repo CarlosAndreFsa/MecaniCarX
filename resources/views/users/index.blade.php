@@ -21,7 +21,7 @@
                         {{ $user->active ? 'Ativo' : 'Inativo' }}
                     </td>
                     <td class="p-2 space-x-2">
-                        {{-- <a href="{{ route('users.edit', $user) }}">Editar</a> --}}
+                        <a href="{{ route('users.edit', $user) }}">Editar</a>
 
                         <form method="POST"
                               {{-- action="{{ route('users.toggle-active', $user) }}" --}}
