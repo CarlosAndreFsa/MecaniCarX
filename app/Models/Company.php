@@ -24,4 +24,9 @@ class Company extends Model
     {
         return $this->morphOne(Address::class, 'addressable');
     }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }
