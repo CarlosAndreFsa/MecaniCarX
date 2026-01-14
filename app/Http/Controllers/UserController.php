@@ -17,7 +17,7 @@ class UserController extends Controller
             return view('users.index', compact('users'));
 
     }
-    
+
      public function create()
      {
         return view('users.create');
@@ -54,13 +54,18 @@ class UserController extends Controller
     {
        
         $data = $request->validate([
-            'name' => 'required|string',
-            'role' => 'required|in:admin,employee',
+            'name' => ['required', 'string'],
+            'role' => ['required', 'in:admin,employee'],
+            'active' => ['required', 'boolean'],
         ]);
 
         $user->update($data);
 
         return redirect()->route('users.index');
     }
+
+    protected $casts = [
+        'active' => 'boolean',
+        ];
 
 }
