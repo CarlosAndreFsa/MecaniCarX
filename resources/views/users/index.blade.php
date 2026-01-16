@@ -24,7 +24,7 @@
                         <a href="{{ route('users.edit', $user) }}">Editar</a>
 
                         <form method="POST"
-                              {{-- action="{{ route('users.toggle-active', $user) }}" --}}
+                              action="{{ route('users.active', $user) }}"
                               class="inline">
                             @csrf
                             @method('PATCH')

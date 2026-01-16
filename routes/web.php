@@ -15,6 +15,7 @@ Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
     Route::post('/users/store', [UserController::class,'store'])->name('users.store');
     Route::get('/users/{user}/edit', [UserController::class,'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserController::class,'update'])->name('users.update');
+    Route::patch('/users/{user}/active', [UserController::class, 'active'])->name('users.active');
     
 });
 
