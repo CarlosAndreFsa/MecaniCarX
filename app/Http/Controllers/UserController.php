@@ -77,7 +77,7 @@ class UserController extends Controller
     protected function authorizeUser(User $user)
     {
         abort_if(
-            $user->company_id !== auth()->user()->company_id,
+            $user->company_id !== auth()->user()->company_id, //->user()->company_id,
             403
         );
     }
