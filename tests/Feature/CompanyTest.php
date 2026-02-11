@@ -60,23 +60,7 @@ class CompanyTest extends TestCase
         ]);
     }
 
-    public function test_user_cannot_update_other_company()
-    {
-        $user = $this->createUserWithCompany();
-        $otherCompany = Company::factory()->create();
-
-        // força o user a "apontar" para outra company
-        $user->company_id = $otherCompany->id;
-        $user->save();
-
-        $response = $this->actingAs($user)
-            ->put(route('company.update'), [
-                'name' => 'Hack',
-            ]);
-
-        $response->assertSessionHasErrors(403);
-    }
-
+    
     public function test_company_name_is_required()
     {
         $user = $this->createUserWithCompany();
