@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,9 @@ class DashboardController extends Controller
             $data['clientsCount'] = User::where('company_id', $companyId)
                 ->where('role', 'client')
                 ->count();
+
+            $data['companyCount'] = Company::where('id', $companyId)
+            ->count();
 
             return view('dashboards.admin', $data);
         }
