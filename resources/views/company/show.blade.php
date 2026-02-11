@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold">Dados da Empresa</h2>
             <div class="flex justify-end gap-2 pt-2">
-                <a href="{{ route('dashboard') }}"
+                <a href="{{ route('painel') }}"
                     class="px-4 py-2 border rounded">
                         Cancelar
                 </a>

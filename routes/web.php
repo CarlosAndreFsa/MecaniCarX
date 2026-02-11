@@ -7,7 +7,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
-Route::middleware(['auth', 'company','active'])->get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::view('/dashboard', 'dashboard')
+->middleware(['auth'])
+    ->name('dashboard');
+
+Route::middleware(['auth', 'company','active'])->get('/painel', [DashboardController::class, 'index'])->name('painel');
 
 Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
    

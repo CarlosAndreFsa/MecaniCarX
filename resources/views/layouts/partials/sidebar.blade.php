@@ -16,7 +16,7 @@
                 Administração
             </p>
 
-            <a href="#"
+            <a href="{{ route('company.show') }}""
                class="block px-3 py-2 rounded hover:bg-gray-700">
                 Empresas
             </a>
