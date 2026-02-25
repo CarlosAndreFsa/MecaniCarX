@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Models\Customer;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -26,6 +28,9 @@ Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
     Route::get('company/show', [CompanyController::class, 'show'])->name('company.show');
     Route::get('company/edit', [CompanyController::class, 'edit'])->name('company.edit');
     Route::put('company', [CompanyController::class, 'update'])->name('company.update');
+
+    //CUSTOMER
+    Route::get('customer/', [CustomerController::class, 'index'])->name('customer.index');
     
 });
 
