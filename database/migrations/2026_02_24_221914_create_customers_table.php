@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
+             $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->string('name');
+            $table->string('name_fantasy');
+            $table->string('cpf_cnpj')->nullable()->unique();
+            $table->string('email')->nullable()->unique();
+            $table->string('phone')->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
