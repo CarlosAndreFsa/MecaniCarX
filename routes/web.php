@@ -31,6 +31,9 @@ Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
 
     //CUSTOMER
     Route::get('customer/', [CustomerController::class, 'index'])->name('customer.index');
+    Route::get('customer/{id}/edit', [CustomerController::class, 'edit'])->name('customer.edit');
+    Route::get('customer/{id}/show', [CustomerController::class, 'show'])->name('customer.show');
+
     
 });
 

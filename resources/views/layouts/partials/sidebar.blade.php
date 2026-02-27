@@ -33,7 +33,7 @@
                 Operacional
             </p>
 
-            <a href="#"
+            <a href="{{ route('customer.index')}}"
                class="block px-3 py-2 rounded hover:bg-gray-700">
                 Clientes
             </a>
