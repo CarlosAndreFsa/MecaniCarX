@@ -2,13 +2,13 @@
     <div class="space-y-6">
 
         <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold">Dados da Empresa</h2>
+            <h2 class="text-xl font-semibold">Dados do Cliente</h2>
             <div class="flex justify-end gap-2 pt-2">
                 <a href="{{ route('painel') }}"
                     class="px-4 py-2 border rounded">
                         Cancelar
                 </a>
-                <a href="{{ route('company.edit') }}"
+                <a href="{{ route('customer.edit', $customer->id) }}"
                 class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                     Editar
                 </a>

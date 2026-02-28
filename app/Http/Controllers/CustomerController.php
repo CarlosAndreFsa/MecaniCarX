@@ -37,12 +37,12 @@ class CustomerController extends Controller
     {
           $customer = Customer::find($request->id);
 
-        return view('customer.show', compact('customer'));
+        return view('customer.edit', compact('customer'));
     }
 
     public function update(Request $request, Customer $customer)
     {
-         $data = $request->validate([
+        $data = $request->validate([
             'name'         => 'required|string|max:255',
             'name_fantasy' => 'nullable|string|max:255',
             'cpf_cnpj'     => 'nullable|string|max:20',
@@ -67,7 +67,7 @@ class CustomerController extends Controller
             );
         }
         return redirect()
-        ->route('customer.show')
+        ->route('customer.index')
         ->with('success', 'Cliebte atualizada com sucesso!');
         
     }

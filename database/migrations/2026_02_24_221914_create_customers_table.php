@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('cpf_cnpj')->nullable()->unique();
             $table->string('email')->nullable()->unique();
             $table->string('phone')->nullable();
+            $table->string('website')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
