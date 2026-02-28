@@ -46,6 +46,13 @@
                     <p class="font-medium">{{ $customer->phone ?? '—' }}</p>
                 </div>
 
+                 <div>
+                    <span class="text-gray-500">Website</span>
+                    <p class="font-medium">
+                        {{ $customer->website ?? '—' }}
+                    </p>
+                </div>
+
                 <div>
                     <span class="text-gray-500">Status</span>
                     <p class="font-medium">

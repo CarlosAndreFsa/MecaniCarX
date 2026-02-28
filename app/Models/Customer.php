@@ -8,7 +8,14 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Customer extends Model
 {
     protected $fillable = [
-        'name, name_fantasy, email, cpf_cnpj, phone, active'
+        'company_id', 
+        'name', 
+        'name_fantasy', 
+        'email', 
+        'cpf_cnpj',         
+        'phone', 
+        'active', 
+        'website',
     ];
 
     public function address(): MorphOne

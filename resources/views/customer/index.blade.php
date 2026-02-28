@@ -3,16 +3,18 @@
 
         <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold">Listar Clientes</h2>
-            <div class="flex justify-end gap-2 pt-2">
+            <div class="flex justify-end gap-2 pt-2 mb-2">
                 <a href="{{ route('painel') }}"
-                    class="px-4 py-2 border rounded">
+                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500">
                         Dashboad
                 </a>
-            </div>
-        </div>
-     </div>
-
- <h2 class="text-xl font-semibold mb-4">Clientes</h2>
+                <a href="{{ route('customer.create') }}"
+                class="px-4 py-2 bg-yellow-300 text-white rounded hover:bg-blue-500">
+                        Novo
+                </a>
+            </div>                           
+        </div>         
+     </div>     
 
     <table class="w-full bg-white shadow rounded">
         <thead>
