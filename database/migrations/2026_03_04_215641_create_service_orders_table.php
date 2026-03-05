@@ -13,7 +13,28 @@ return new class extends Migration
     {
         Schema::create('service_orders', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
+
+            $table->string('number')->unique(); // número da OS
+            $table->string('title');
+            $table->text('description')->nullable();
+
+            $table->decimal('labor_cost', 10, 2)->default(0);
+            $table->decimal('parts_cost', 10, 2)->default(0);
+            $table->decimal('total', 10, 2)->default(0);
+
+            $table->enum('status', [
+                'open',
+                'in_progress',
+                'completed',
+                'canceled'
+            ])->default('open');
+
+            $table->date('entry_date');
+            $table->date('delivery_date')->nullable();
+
+                $table->timestamps();
         });
     }
 
