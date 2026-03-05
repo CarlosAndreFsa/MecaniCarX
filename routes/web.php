@@ -3,6 +3,7 @@
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ServiceOrderController;
 use App\Http\Controllers\UserController;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Route;
@@ -38,7 +39,14 @@ Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
     Route::put('customer/{customer}', [CustomerController::class, 'update'])->name('customer.update');
     Route::get('customer/{id}/show', [CustomerController::class, 'show'])->name('customer.show');
 
-    
+    //SERVICE ORDER
+    Route::get('serviceOrder/', [ServiceOrderController::class, 'index'])->name('serviceOrder.index');
+    Route::get('serviceOrder/create', [ServiceOrderController::class, 'create'])->name('serviceOrder.create');
+    Route::post('serviceOrder/store', [ServiceOrderController::class, 'store'])->name('serviceOrder.store');
+    Route::get('serviceOrder/{id}/edit', [ServiceOrderController::class, 'edit'])->name('serviceOrder.edit');
+    Route::put('serviceOrder/{order}', [ServiceOrderController::class, 'update'])->name('serviceOrder.update');
+    Route::get('serviceOrder/{id}/show', [ServiceOrderController::class, 'show'])->name('serviceOrder.show');
+
 });
 
 Route::view('profile', 'profile')

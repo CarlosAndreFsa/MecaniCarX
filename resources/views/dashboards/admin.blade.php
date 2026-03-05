@@ -9,14 +9,14 @@
 
         <div class="p-4 bg-white shadow rounded">
             <p class="text-gray-500 text-sm">Funcionários</p>
-             <a href="{{ route('users.index') }}"
+             <a href="{{ route('users.index') }}">
                 <p class="text-2xl font-bold">{{ $usersCount ?? 0 }}</p>
              </a>
         </div>
 
         <div class="p-4 bg-white shadow rounded">
             <p class="text-gray-500 text-sm">Clientes</p>
-            <a href="{{ route('customer.index') }}"
+            <a href="{{ route('customer.index') }}">
                         <p class="text-2xl font-bold">{{ $clientsCount ?? 0 }}</p>
                 </a>
           
@@ -29,7 +29,9 @@
 
         <div class="p-4 bg-white shadow rounded">
             <p class="text-gray-500 text-sm">Ordens de Serviço</p>
-            <p class="text-2xl font-bold">0</p>
+             <a href="{{ route('serviceOrder.index') }}">
+                <p class="text-2xl font-bold">0</p>
+             </a>
         </div>
 
     </div>
