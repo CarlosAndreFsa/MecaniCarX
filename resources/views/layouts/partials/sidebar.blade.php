@@ -21,7 +21,7 @@
                 Empresas
             </a>
 
-            <a href="#"
+            <a href="{{ route('users.index') }}"
                class="block px-3 py-2 rounded hover:bg-gray-700">
                 Usuários
             </a>

@@ -7,11 +7,11 @@
             <h2 class="text-xl font-semibold">Editar Cliente</h2>
                 <div class="flex justify-end gap-2 pt-2">
                     <a href="{{ route('customer.index') }}"
-                        class="px-4 py-2 border rounded">
+                        class="px-4 py-2 bg-yellow-300 text-white border rounded hover:bg-blue-700">
                             Cancelar
                     </a>
                 <button type="submit"
-                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-700">
                     Salvar
                 </button>
             </div>
@@ -130,11 +130,11 @@
             <h2 class="text-xl font-semibold">Editar Cliente</h2>
                 <div class="flex justify-end gap-2 pt-2">
                     <a href="{{ route('customer.index') }}"
-                        class="px-4 py-2 border rounded">
+                        class="px-4 py-2 bg-yellow-300 text-white border rounded hover:bg-blue-700">
                             Cancelar
                     </a>
                 <button type="submit"
-                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-700">
                     Salvar
                 </button>
             </div>

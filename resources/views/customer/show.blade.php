@@ -4,12 +4,12 @@
         <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold">Dados do Cliente</h2>
             <div class="flex justify-end gap-2 pt-2">
-                <a href="{{ route('painel') }}"
-                    class="px-4 py-2 border rounded">
-                        Cancelar
+                <a href="{{ route('customer.index') }}"
+                    class="px-4 py-2 bg-yellow-300 text-white rounded hover:bg-yellow-600">
+                        Voltar
                 </a>
                 <a href="{{ route('customer.edit', $customer->id) }}"
-                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-700">
                     Editar
                 </a>
             </div>

@@ -115,4 +115,14 @@ class CustomerController extends Controller
     {
         
     }
+    public function active (Customer $customer)
+    {
+        $customer->update(['active' => ! $customer->active]);
+
+        return back();
+
+    }
+    protected $casts = [
+        'active' => 'boolean',
+        ];
 }

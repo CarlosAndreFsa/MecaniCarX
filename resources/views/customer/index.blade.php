@@ -5,7 +5,7 @@
             <h2 class="text-xl font-semibold">Listar Clientes</h2>
             <div class="flex justify-end gap-2 pt-2 mb-2">
                 <a href="{{ route('painel') }}"
-                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500">
+                class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-500">
                         Dashboad
                 </a>
                 <a href="{{ route('customer.create') }}"
@@ -32,7 +32,7 @@
                     <td class="p-2">{{ $customer->name }}</td>
                      <td class="p-2">{{ $customer->name_fantasy }}</td>
                     <td class="p-2">{{ $customer->email }}</td>                   
-                    <td class="p-2">
+                    <td  class="p-2                        ">
                         {{ $customer->active ? 'Ativo' : 'Inativo' }}
                     </td>
                     <td class="p-2 space-x-2">
@@ -40,7 +40,7 @@
                         <a href="{{ route('customer.show', $customer) }}">Detalhes</a>
 
                         <form method="POST"
-                              {{-- action="{{ route('customer.active', $customer) }}" --}}
+                              action="{{ route('customer.active', $customer) }}"
                               class="inline">
                             @csrf
                             @method('PATCH')
