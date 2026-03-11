@@ -38,7 +38,7 @@
                 Clientes
             </a>
 
-            <a href="{{ route('serviceOrder.index')}}"
+            <a href="{{ route('service-orders.index')}}"
                class="block px-3 py-2 rounded hover:bg-gray-700">
                 Ordens de Serviço
             </a>

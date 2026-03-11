@@ -29,7 +29,7 @@
 
         <div class="p-4 bg-white shadow rounded">
             <p class="text-gray-500 text-sm">Ordens de Serviço</p>
-             <a href="{{ route('serviceOrder.index') }}">
+             <a href="{{ route('service-orders.index') }}">
                 <p class="text-2xl font-bold">0</p>
              </a>
         </div>

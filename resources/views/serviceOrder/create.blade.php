@@ -1,6 +1,6 @@
 <x-app-layout>
 
-    <form method="POST" action="{{ route('serviceOrder.store') }}" class="space-y-6">
+    <form method="POST" action="{{ route('service-orders.store') }}" class="space-y-6">
         @csrf
 
         {{-- HEADER --}}
@@ -10,7 +10,7 @@
             </h2>
 
             <div class="flex gap-2">
-                <a href="{{ route('serviceOrder.index') }}"
+                <a href="{{ route('service-orders.index') }}"
                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
                     Cancelar
                 </a>

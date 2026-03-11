@@ -8,7 +8,7 @@
                 class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-500">
                         Dashboad
                 </a>
-                <a href="{{ route('serviceOrder.create') }}"
+                <a href="{{ route('service-orders.create') }}"
                 class="px-4 py-2 bg-yellow-300 text-white rounded hover:bg-blue-500">
                         Novo
                 </a>
@@ -22,17 +22,23 @@
                 <th class="p-2">Número</th>
                 <th class="p-2">Cliente</th>
                 <th class="p-2">Status</th>
-                <th class="p-2">Total</th>
+                <th class="p-2">Veiculo</th>
+                <th class="p-2">Ações</th>
             </tr>
         </thead>
 
     <tbody>
-        @foreach($orders as $order)
+        @foreach($orders as $service_order)
             <tr class="border-b">
-                <td class="p-2">{{ $order->number }}</td>
-                <td class="p-2">{{ $order->customer->name }}</td>
-                <td class="p-2">{{ $order->status }}</td>
-                <td class="p-2">R$ {{ number_format($order->total, 2, ',', '.') }}</td>
+                <td class="p-2">{{ $service_order->number }}</td>
+                <td class="p-2">{{ $service_order->customer->name }}</td>
+                <td class="p-2">{{ $service_order->status }}</td>
+                <td class="p-2">{{ "veiculo xx"}}</td>
+                <td class="p-2 space-x-2">
+                    <a href="{{ route('service-orders.show', $service_order)}}">Detalhes</a>
+                    <a href="">Editar</a>
+                    <a href="">Excluir</a>
+                </td>
             </tr>
         @endforeach
     </tbody>

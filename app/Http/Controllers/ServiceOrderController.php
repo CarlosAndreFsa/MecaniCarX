@@ -43,7 +43,8 @@ class ServiceOrderController extends Controller
             'entry_date' => 'required|date',
             'delivery_date' => 'nullable|date',
         ]);
-
+        $data['labor_cost'] = floatval($data['labor_cost'] ?? 0);
+        $data['parts_cost'] = floatval($data['parts_cost'] ?? 0);
         $data['number'] = 'OS-' . now()->timestamp;
         $data['total'] = ($data['labor_cost'] ?? 0) + ($data['parts_cost'] ?? 0);
 
@@ -57,17 +58,20 @@ class ServiceOrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ServiceOrder $serviceOrder)
+    public function show(ServiceOrder $service_order)
     {
-        //
+        $order = ServiceOrder::find($service_order);
+
+        return view('serviceOrder.show', compact('service_order'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ServiceOrder $serviceOrder)
+    public function edit(ServiceOrder $service_order)
     {
-        //
+        $customers = Customer::all();
+        return view('serviceOrder.edit',compact('service_order','customers'));
     }
 
     /**
