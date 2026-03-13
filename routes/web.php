@@ -34,10 +34,10 @@ Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
     Route::get('customer/', [CustomerController::class, 'index'])->name('customer.index');
     Route::get('customer/create', [CustomerController::class, 'create'])->name('customer.create');
     Route::post('customer/store', [CustomerController::class, 'store'])->name('customer.store');
-    Route::get('customer/{id}/edit', [CustomerController::class, 'edit'])->name('customer.edit');
+    Route::get('customer/{customer}/edit', [CustomerController::class, 'edit'])->name('customer.edit');
     Route::patch('customer/{customer}/active', [CustomerController::class, 'active'])->name('customer.active');
     Route::put('customer/{customer}', [CustomerController::class, 'update'])->name('customer.update');
-    Route::get('customer/{id}/show', [CustomerController::class, 'show'])->name('customer.show');
+    Route::get('customer/{customer}/show', [CustomerController::class, 'show'])->name('customer.show');
 
     //SERVICE ORDER
     Route::get('service-orders/', [ServiceOrderController::class, 'index'])->name('service-orders.index');
@@ -46,6 +46,7 @@ Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
     Route::get('service-orders/{service_order}/edit', [ServiceOrderController::class, 'edit'])->name('service-orders.edit');
     Route::put('service-orders/{service_order}', [ServiceOrderController::class, 'update'])->name('service-orders.update');
     Route::get('service-orders/{service_order}/show', [ServiceOrderController::class, 'show'])->name('service-orders.show');
+    Route::delete('service-orders/{service_order}', [ServiceOrderController::class, 'destroy'])->name('service-orders.destroy');
 
 });
 

@@ -18,7 +18,8 @@ return new class extends Migration
 
             $table->string('number')->unique(); // número da OS
             $table->string('title');
-            $table->text('description')->nullable();
+            $table->text('technical_description')->nullable();
+            $table->text('customer_description')->nullable();
 
             $table->decimal('labor_cost', 10, 2)->default(0);
             $table->decimal('parts_cost', 10, 2)->default(0);
