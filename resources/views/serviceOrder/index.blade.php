@@ -1,16 +1,37 @@
 <x-app-layout>
-    <div class="space-y-6">
-        @if(session('success'))
-    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 shadow-sm" role="alert">
-        {{ session('success') }}
-    </div>
-@endif
+    {{-- Alertas Dinâmicos --}}
+<div class="space-y-4 mb-4">
+    @foreach (['success' => 'bg-green-100 border-green-500 text-green-700', 
+               'edit' => 'bg-yellow-100 border-yellow-500 text-yellow-700', 
+               'delete' => 'bg-red-100 border-red-500 text-red-700'] as $key => $style)
+        
+        @if(session($key))
+            <div x-data="{ show: true }" 
+                 x-show="show" 
+                 x-init="setTimeout(() => show = false, 3000)" {{-- Some após 5 segundos --}}
+                 x-transition:leave="transition ease-in duration-1000"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="{{ $style }} border-l-4 p-4 shadow-sm flex justify-between items-center" 
+                 role="alert">
+                
+                <div>
+                    <p class="font-bold">{{ ucfirst($key === 'delete' ? 'Excluído' : ($key === 'edit' ? 'Editado' : 'Sucesso')) }}</p>
+                    <p>{{ session($key) }}</p>
+                </div>
 
-@if(session('error'))
-    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 shadow-sm" role="alert">
-        {{ session('error') }}
-    </div>
-@endif
+                <button @click="show = false" class="text-lg font-bold">&times;</button>
+            </div>
+        @endif
+    @endforeach
+</div>
+    <div class="space-y-6">
+      
+        @if(session('error'))
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 shadow-sm" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
         {{-- HEADER --}}
         <div class="flex items-center justify-between">
             <h2 class="text-2xl font-bold text-gray-800">Ordens de Serviço</h2>
@@ -24,7 +45,28 @@
                 </a>
             </div>
         </div>
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm mb-6">
+                <form id="filter-form" action="{{ route('service-orders.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <input type="text" 
+                            id="search-input"
+                            name="search" 
+                            value="{{ request('search') }}" 
+                            placeholder="Nº OS, Nome ou ID do Cliente..." 
+                            class="w-full border-gray-300 rounded-lg focus:ring-blue-500">
+                    </div>
 
+                    <div class="w-full md:w-48">
+                        <select name="status" id="status-select" class="w-full border-gray-300 rounded-lg focus:ring-blue-500">
+                            <option value="">Todos os Status</option>
+                            <option value="open" {{ request('status') == 'open' ? 'selected' : '' }}>Aberta</option>
+                            <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>Em andamento</option>
+                            <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Concluída</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
         {{-- TABELA --}}
         <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
             <table class="w-full text-left">
@@ -98,4 +140,34 @@
             {{ $orders->links() }}
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('filter-form');
+            const searchInput = document.getElementById('search-input');
+            const statusSelect = document.getElementById('status-select');
+            let timer;
+
+            // Função que envia o formulário
+            const submitForm = () => form.submit();
+
+            // Evento para o Input (com atraso/debounce)
+            searchInput.addEventListener('input', () => {
+                clearTimeout(timer);
+                timer = setTimeout(submitForm, 500); // Aguarda 0.5s após parar de digitar
+            });
+
+            // Evento para o Select (imediato)
+            statusSelect.addEventListener('change', submitForm);
+
+            // Coloque isso dentro do seu DOMContentLoaded
+            if (document.getElementById('search-input').value !== '') {
+                const input = document.getElementById('search-input');
+                // Coloca o cursor no final do texto
+                input.focus();
+                const val = input.value;
+                input.value = '';
+                input.value = val;
+            }
+        });
+    </script>
 </x-app-layout>

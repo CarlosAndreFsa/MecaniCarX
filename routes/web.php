@@ -47,6 +47,7 @@ Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
     Route::put('service-orders/{service_order}', [ServiceOrderController::class, 'update'])->name('service-orders.update');
     Route::get('service-orders/{service_order}/show', [ServiceOrderController::class, 'show'])->name('service-orders.show');
     Route::delete('service-orders/{service_order}', [ServiceOrderController::class, 'destroy'])->name('service-orders.destroy');
+    Route::get('service-orders/{service_order}/pdf', [ServiceOrderController::class, 'generatePdf'])->name('service-orders.pdf');
 
 });
 

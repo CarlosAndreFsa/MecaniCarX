@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\ServiceOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class ServiceOrderController extends Controller
@@ -11,13 +12,30 @@ class ServiceOrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = ServiceOrder::with('customer')
-        ->where('company_id', auth()->user()->company_id)
-        ->latest()->paginate(10);
+        $query = ServiceOrder::query()->with('customer');
 
-        return view('serviceOrder.index', compact('orders'));
+        // Filtro de busca (Número ou Nome do Cliente)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('number', 'like', "%{$search}%")
+                ->orWhere('customer_id', $search) // Busca exata por ID do cliente
+                ->orWhereHas('customer', function($customerQuery) use ($search) {
+                    $customerQuery->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        // Filtro de Status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $orders = $query->latest()->paginate(10)->withQueryString();
+
+            return view('serviceOrder.index', compact('orders'));
     }
 
     /**
@@ -99,24 +117,42 @@ class ServiceOrderController extends Controller
 
         return redirect()
             ->route('service-orders.index')
-            ->with('success', 'Ordem de serviço criada com sucesso!');
+            ->with('edit', 'Ordem de serviço criada com sucesso!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
    public function destroy(ServiceOrder $service_order)
-{
-    // 1. Opcional: Verificar se a OS pode ser excluída (ex: não excluir se estiver 'concluída')
-    if ($service_order->status === 'completed') {
-        return redirect()->back()->with('error', 'Não é possível excluir uma ordem concluída.');
+    {
+        // 1. Opcional: Verificar se a OS pode ser excluída (ex: não excluir se estiver 'concluída')
+        if ($service_order->status === 'completed') {
+            return redirect()->back()->with('error', 'Não é possível excluir uma ordem concluída.');
+        }
+
+        // 2. Deletar do banco
+        $service_order->delete();
+
+        // 3. Redirecionar com mensagem de sucesso
+        return redirect()->route('service-orders.index')
+                        ->with('delete', 'Ordem de serviço removida com sucesso!');
     }
+    public function generatePdf(ServiceOrder $service_order)
+    {
+        // Carrega a view específica para o PDF (vamos criar abaixo)
+       $html = view('serviceOrder.pdf', compact('service_order'))->render();
+    
+    // Força a conversão de entidades HTML para garantir os acentos
+    $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
 
-    // 2. Deletar do banco
-    $service_order->delete();
-
-    // 3. Redirecionar com mensagem de sucesso
-    return redirect()->route('service-orders.index')
-                     ->with('success', 'Ordem de serviço removida com sucesso!');
-}
+    $pdf = Pdf::loadHTML($html)
+              ->setPaper('a4')
+              ->setOptions([
+                  'defaultFont' => 'DejaVu Sans', // Esta fonte é a melhor para acentos
+                  'isHtml5ParserEnabled' => true,
+              ]);
+    
+        // Retorna o PDF para o navegador (download ou visualização)
+        return $pdf->stream("OS-{$service_order->number}.pdf");
+    }
 }
