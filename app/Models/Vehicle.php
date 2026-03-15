@@ -13,6 +13,7 @@ class Vehicle extends Model
     use HasFactory;
 
     protected $fillable = [
+        'company_id',
         'customer_id',
         'brand_id',
         'model',
@@ -21,6 +22,18 @@ class Vehicle extends Model
         'color',
         'vin',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($vehicle) {
+            $vehicle->company_id = auth()->user()->company_id;
+        });
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
 
     // Relacionamento: Veículo pertence a um Cliente
     public function customer(): BelongsTo

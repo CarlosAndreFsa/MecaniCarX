@@ -23,4 +23,20 @@ class Customer extends Model
        return $this->morphOne(Address::class, 'addressable');
 
     }
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
+    
+    public function serviceOrders()
+    {
+        return $this->hasMany(ServiceOrder::class);
+    }
+    protected static function booted()
+    {
+        static::creating(function ($customer) {
+            $customer->company_id = auth()->user()->company_id;
+        });
+    }
 }

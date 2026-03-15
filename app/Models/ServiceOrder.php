@@ -42,5 +42,10 @@ class ServiceOrder extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function vehicle() : BelongsTo
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
 
 }
