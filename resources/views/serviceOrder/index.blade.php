@@ -16,7 +16,7 @@
                  role="alert">
                 
                 <div>
-                    <p class="font-bold">{{ ucfirst($key === 'delete' ? 'Excluído' : ($key === 'edit' ? 'Editado' : 'Sucesso')) }}</p>
+                    <p class="font-bold">{{ ucfirst($key === 'delete' ? 'Excluído' : ($key === 'error' ? 'Erro' : ($key === 'edit' ? 'Editado' : 'Sucesso'))) }}</p>
                     <p>{{ session($key) }}</p>
                 </div>
 
