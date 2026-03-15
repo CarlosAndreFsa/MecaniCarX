@@ -11,6 +11,7 @@ class ServiceOrder extends Model
     protected $fillable = [
         'company_id',
         'customer_id',
+        'vehicle_id',
         'number',
         'title',
         'technical_description',
@@ -39,6 +40,11 @@ class ServiceOrder extends Model
     public function company() : BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function vehicle() : BelongsTo
+    {
+        return $this->belongsTo(Vehicle::class);
     }
 
 

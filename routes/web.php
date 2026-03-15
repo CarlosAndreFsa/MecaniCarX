@@ -38,6 +38,18 @@ Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
     Route::put('customer/{customer}', [CustomerController::class, 'update'])->name('customer.update');
     Route::get('customer/{customer}/show', [CustomerController::class, 'show'])->name('customer.show');
 
+    
+    //VEHICLE
+    Route::get('vehicles/', [VehicleController::class, 'index'])->name('vehicles.index');
+    Route::get('vehicles/create', [VehicleController::class, 'create'])->name('vehicles.create');
+    Route::post('vehicles/store', [VehicleController::class, 'store'])->name('vehicles.store');
+    Route::get('vehicles/{vehicle}/edit', [VehicleController::class, 'edit'])->name('vehicles.edit');
+    Route::put('vehicles/{vehicle}', [VehicleController::class, 'update'])->name('vehicles.update');
+    Route::get('vehicles/{vehicle}/show', [VehicleController::class, 'show'])->name('vehicles.show');
+    Route::delete('vehicles/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicles.destroy');
+    //Route::get('vehicles/{vehicle}/pdf', [VehicleController::class, 'generatePdf'])->name('vehicles.pdf');
+
+
     //SERVICE ORDER
     Route::get('service-orders/', [ServiceOrderController::class, 'index'])->name('service-orders.index');
     Route::get('service-orders/create', [ServiceOrderController::class, 'create'])->name('service-orders.create');
