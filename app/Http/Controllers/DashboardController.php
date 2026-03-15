@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
+use App\Models\Customer;
+use App\Models\ServiceOrder;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -12,7 +15,7 @@ class DashboardController extends Controller
     {
         $user = $request->user();
         $companyId = $user->company_id;
- 
+
         $data =[
              'usersCount' => User::where('company_id', $companyId)
             ->count(),
@@ -23,9 +26,14 @@ class DashboardController extends Controller
             ->where('role', 'employee')
             ->count();
 
-            $data['clientsCount'] = User::where('company_id', $companyId)
-                ->where('role', 'client')
+            $data['clientsCount'] = Customer::where('company_id', $companyId)
                 ->count();
+
+            $data['companyCount'] = Company::where('id', $companyId)
+            ->count();
+
+             $data['serviceOrderCount'] = ServiceOrder::where('company_id', $companyId)
+            ->count();
 
             return view('dashboards.admin', $data);
         }

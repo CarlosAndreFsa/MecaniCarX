@@ -64,6 +64,23 @@ class UserController extends Controller
         return redirect()->route('users.index');
     }
 
+    public function active(User $user)
+    {
+      
+         $this->authorizeUser($user);
+
+        $user->update(['active' => ! $user->active]);
+
+        return back();
+    }
+
+    protected function authorizeUser(User $user)
+    {
+        abort_if(
+            $user->company_id !== auth()->user()->company_id, //->user()->company_id,
+            403
+        );
+    }
     protected $casts = [
         'active' => 'boolean',
         ];

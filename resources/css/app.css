@@ -1,3 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* resources/css/app.css */
+
+@media print {
+    /* Ocultar elementos desnecessários */
+    nav, aside, footer, button, .flex.gap-2, .no-print, [role="alert"] {
+        display: none !important;
+    }
+
+    /* Reset de layout para papel */
+    body {
+        background-color: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        color: black !important;
+    }
+
+    .bg-white {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    /* Ajustar Grid para empilhar ou manter colunas no papel */
+    .print-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 20px !important;
+    }
+
+    /* Cabeçalho de impressão (exibido apenas no papel) */
+    .print-only {
+        display: block !important;
+    }
+}
+
+/* Esconder elementos de impressão na tela do sistema */
+.print-only {
+    display: none;
+}
