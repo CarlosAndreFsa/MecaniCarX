@@ -13,8 +13,6 @@ use Tests\TestCase;
 class VehicleTest extends TestCase
 {
     use RefreshDatabase;
-
-    /** @test */
     
     #[Test]
     public function an_authenticated_admin_can_create_a_vehicle()
