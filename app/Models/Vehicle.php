@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Brand;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,12 +22,12 @@ class Vehicle extends Model
         'vin',
     ];
 
-    protected static function booted()
-    {
-        static::creating(function ($vehicle) {
-            $vehicle->company_id = auth()->user()->company_id;
-        });
-    }
+    // protected static function booted()
+    // {
+    //     static::creating(function ($vehicle) {
+    //         $vehicle->company_id = auth()->user()->company_id;
+    //     });
+    // }
 
     public function company(): BelongsTo
     {
