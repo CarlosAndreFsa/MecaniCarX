@@ -14,13 +14,14 @@ class ServiceOrderController extends Controller
      */
     public function index(Request $request)
     {
-        $query = ServiceOrder::query()->with('customer');
+        $query = ServiceOrder::query()->with(['customer', 'vehicle']);
 
         // Filtro de busca (Número ou Nome do Cliente)
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('number', 'like', "%{$search}%")
+                ->orWhereRelation('vehicle', 'plate', 'like', "%{$search}%")
                 ->orWhere('customer_id', $search) // Busca exata por ID do cliente
                 ->orWhereHas('customer', function($customerQuery) use ($search) {
                     $customerQuery->where('name', 'like', "%{$search}%");
@@ -53,6 +54,7 @@ class ServiceOrderController extends Controller
     {
         $data = $request->validate([
             'customer_id' => 'required|exists:customers,id',
+            'vehicle_id' => 'required|exists:vehicles,id',
             'title' => 'required|string|max:255',
             'technical_description' => 'nullable|string',
             'customer_description' => 'required|string',
@@ -78,7 +80,7 @@ class ServiceOrderController extends Controller
      */
     public function show(ServiceOrder $service_order)
     {
-        $order = ServiceOrder::find($service_order);
+        $service_order->load(['customer', 'vehicle']);
 
         return view('serviceOrder.show', compact('service_order'));
     }
@@ -99,6 +101,7 @@ class ServiceOrderController extends Controller
     {
         $data = $request->validate([
             'customer_id' => 'required|exists:customers,id',
+            'vehicle_id' => 'required|exists:vehicles,id',
             'title' => 'required|string|max:255',
             'customer_description'   => 'required|string',
             'technical_description'   => 'nullable|string',
