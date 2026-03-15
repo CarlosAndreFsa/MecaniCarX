@@ -24,9 +24,10 @@ class CompanyController extends Controller
 
     public function update(Request $request)
     {
+      
         $company = $request->user()->company;
       
-        //$this->authorize('update', $company);
+      //  $this->authorize('update', $company);
         $data = $request->validate([
             'name'         => 'required|string|max:255',
             'name_fantasy' => 'nullable|string|max:255',

@@ -5,7 +5,7 @@
 
     <nav class="space-y-2">
 
-        <a href="{{ route('dashboard') }}"
+        <a href="{{ route('painel') }}"
            class="block px-3 py-2 rounded hover:bg-gray-700">
             Dashboard
         </a>
@@ -16,12 +16,12 @@
                 Administração
             </p>
 
-            <a href="#"
+            <a href="{{ route('company.show') }}""
                class="block px-3 py-2 rounded hover:bg-gray-700">
                 Empresas
             </a>
 
-            <a href="#"
+            <a href="{{ route('users.index') }}"
                class="block px-3 py-2 rounded hover:bg-gray-700">
                 Usuários
             </a>
@@ -33,12 +33,12 @@
                 Operacional
             </p>
 
-            <a href="#"
+            <a href="{{ route('customer.index')}}"
                class="block px-3 py-2 rounded hover:bg-gray-700">
                 Clientes
             </a>
 
-            <a href="#"
+            <a href="{{ route('service-orders.index')}}"
                class="block px-3 py-2 rounded hover:bg-gray-700">
                 Ordens de Serviço
             </a>
