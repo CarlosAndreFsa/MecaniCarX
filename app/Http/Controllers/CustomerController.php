@@ -17,9 +17,9 @@ class CustomerController extends Controller
 
     }
 
-    public function show(Request $request)
+    public function show(Customer $customer)
     {
-        $customer = Customer::find($request->id);
+      //  $customer = Customer::find($request->id);
 
         return view('customer.show', compact('customer'));
     }
@@ -71,10 +71,10 @@ class CustomerController extends Controller
         ->with('success', 'Cliente cadastrado com sucesso!');
     }
 
-    public function edit(Request $request)
+    public function edit(Customer $customer)
     {
-          $customer = Customer::find($request->id);
-
+       //   $customer = Customer::where('company_id', auth()->user()->company_id)->get();
+          
         return view('customer.edit', compact('customer'));
     }
 

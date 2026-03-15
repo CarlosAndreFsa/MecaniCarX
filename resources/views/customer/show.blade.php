@@ -8,7 +8,7 @@
                     class="px-4 py-2 bg-yellow-300 text-white rounded hover:bg-yellow-600">
                         Voltar
                 </a>
-                <a href="{{ route('customer.edit', $customer->id) }}"
+                <a href="{{ route('customer.edit', $customer) }}"
                 class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-700">
                     Editar
                 </a>
