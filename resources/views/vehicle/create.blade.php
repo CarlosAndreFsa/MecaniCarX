@@ -15,14 +15,7 @@
                         {{-- Cliente --}}
                         <div>
                             <label for="customer_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Cliente Proprietário *</label>
-                            <select name="customer_id" id="customer_id" class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm" required>
-                                <option value="">Selecione o Cliente...</option>
-                                @foreach($customers as $customer)
-                                    <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
-                                        {{ $customer->name }} {{ $customer->cpf_cnpj ? '('.$customer->cpf_cnpj.')' : '' }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <select name="customer_id" id="customer_id" class="w-full" required placeholder="Digite o nome ou CPF para buscar..."></select>
                             @error('customer_id') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
                         </div>
 
@@ -75,4 +68,29 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Agora o TomSelect já está carregado pelo layout pai
+        new TomSelect('#customer_id', {
+            valueField: 'id',
+            labelField: 'name',
+            searchField: 'name',
+            loadThrottle: 300,
+            shouldLoad: (query) => query.length >= 2,
+            load: function(query, callback) {
+                const url = `{{ route('customers.search') }}?q=${encodeURIComponent(query)}`;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(json => callback(json))
+                    .catch(() => callback());
+            },
+            render: {
+                option: (data, escape) => `<div class="px-3 py-2 text-gray-800 dark:text-gray-200">${escape(data.name)}</div>`,
+                item: (data, escape) => `<div class="text-gray-800 dark:text-gray-100 font-medium">${escape(data.name)}</div>`
+            }
+        });
+    });
+</script>
+@endpush
 </x-app-layout>

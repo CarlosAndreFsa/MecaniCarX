@@ -21,7 +21,7 @@ class DashboardController extends Controller
             ->count(),
 
         ];
-        if($user->role  === 'admin'){
+        if($user->role  === 'admin' || $user->role === 'super-admin'){
             $data['employeesCount'] = $user::where('company_id', $companyId)
             ->where('role', 'employee')
             ->count();

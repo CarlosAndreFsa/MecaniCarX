@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MecaniCarX - Sistema</title>
         <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
-
+ <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css"
+                            rel="stylesheet">
+                            
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -50,6 +52,9 @@
                         <a href="{{ route('customer.index') }}" class="block p-2 text-sm hover:text-white transition">Clientes</a>
                         <a href="{{ route('users.index') }}" class="block p-2 text-sm hover:text-white transition">Funcionários</a>
                         <a href="{{ route('vehicles.index') }}" class="block p-2 text-sm hover:text-white transition">Veículos</a>
+                        @if (auth()->user()->role === 'super-admin')
+                            <a href="{{ route('brands.index') }}" class="block p-2 text-sm hover:text-white transition">Marcas</a>                            
+                        @endif
                     </div>
                 </div>
 
@@ -125,18 +130,20 @@
             </main>
         </div>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 
     <script>
+        // Lógica de Tema (Dark/Light)
         const lightIcon = document.getElementById('theme-icon-light');
         const darkIcon = document.getElementById('theme-icon-dark');
 
         function updateIcons() {
             if (document.documentElement.classList.contains('dark')) {
-                lightIcon.classList.remove('hidden');
-                darkIcon.classList.add('hidden');
+                lightIcon?.classList.remove('hidden');
+                darkIcon?.classList.add('hidden');
             } else {
-                lightIcon.classList.add('hidden');
-                darkIcon.classList.remove('hidden');
+                lightIcon?.classList.add('hidden');
+                darkIcon?.classList.remove('hidden');
             }
         }
 
@@ -150,7 +157,12 @@
             }
             updateIcons();
         }
-        updateIcons();
+        
+        // Inicializa ícones ao carregar
+        document.addEventListener('DOMContentLoaded', updateIcons);
     </script>
+
+    {{-- A Pilha (Stack) onde o script do Tom Select das Views entrará --}}
+    @stack('scripts')
 </body>
 </html>

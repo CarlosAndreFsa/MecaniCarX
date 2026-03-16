@@ -42,6 +42,9 @@ Route::middleware(['auth',
     Route::patch('customer/{customer}/active', [CustomerController::class, 'active'])->name('customer.active');
     Route::put('customer/{customer}', [CustomerController::class, 'update'])->name('customer.update');
     Route::get('customer/{customer}/show', [CustomerController::class, 'show'])->name('customer.show');
+    Route::get('/customers/search', [CustomerController::class, 'search'])->name('customers.search');
+    Route::delete('customer/{customer}', [CustomerController::class, 'destroy'])->name('customer.destroy');
+
 
     //VEHICLE
     Route::get('vehicles/', [VehicleController::class, 'index'])->name('vehicles.index');
