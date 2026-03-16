@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ServiceOrderController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VehicleController;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +17,10 @@ Route::middleware(['auth'])->get('/dashboard', [DashboardController::class, 'ind
 
 Route::middleware(['auth', 'company','active'])->get('/painel', [DashboardController::class, 'index'])->name('painel');
 
-Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
+Route::middleware(['auth', 
+    'company', 
+    'active', 
+    'role:admin,super-admin,employee,client'])->group(function(){
    
     Route::get('/users', [UserController::class,'index'])->name('users.index');
     Route::get('/users/create', [UserController::class,'create'])->name('users.create');
@@ -38,7 +43,6 @@ Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
     Route::put('customer/{customer}', [CustomerController::class, 'update'])->name('customer.update');
     Route::get('customer/{customer}/show', [CustomerController::class, 'show'])->name('customer.show');
 
-    
     //VEHICLE
     Route::get('vehicles/', [VehicleController::class, 'index'])->name('vehicles.index');
     Route::get('vehicles/create', [VehicleController::class, 'create'])->name('vehicles.create');
@@ -60,6 +64,17 @@ Route::middleware(['auth', 'company','active','role:admin'])->group(function(){
     Route::delete('service-orders/{service_order}', [ServiceOrderController::class, 'destroy'])->name('service-orders.destroy');
     Route::get('service-orders/{service_order}/pdf', [ServiceOrderController::class, 'generatePdf'])->name('service-orders.pdf');
 
+});
+
+Route::middleware(['auth', 'role:super-admin'])->group(function() {
+    //BRAND (Acesso somente para Super Admin)
+    Route::get('brands/', [BrandController::class, 'index'])->name('brands.index');
+    Route::get('brands/create', [BrandController::class, 'create'])->name('brands.create');
+    Route::post('brands/store', [BrandController::class, 'store'])->name('brands.store');
+    Route::get('brands/{brand}/edit', [BrandController::class, 'edit'])->name('brands.edit');
+    Route::put('brands/{brand}', [BrandController::class, 'update'])->name('brands.update');
+    Route::get('brands/{brand}/show', [BrandController::class, 'show'])->name('brands.show');
+    Route::delete('brands/{brand}', [BrandController::class, 'destroy'])->name('brands.destroy');
 });
 
 Route::view('profile', 'profile')
