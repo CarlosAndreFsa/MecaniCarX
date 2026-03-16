@@ -41,3 +41,102 @@
 .print-only {
     display: none;
 }
+/* resources/css/app.css */
+
+/* 1. Estilo do Campo de Entrada (Onde você digita) */
+.ts-control {
+    @apply bg-gray-50 border-gray-300 rounded-xl !important;
+    padding: 0.6rem !important;
+    transition: all 0.2s;
+}
+
+.dark .ts-control {
+    background-color: #111827 !important; /* gray-900 */
+    border-color: #374151 !important; /* gray-700 */
+    color: #f3f4f6 !important; /* gray-100 - PARA VER O QUE ESCREVE */
+}
+
+/* Forçar a cor do texto enquanto digita no Dark Mode */
+.dark .ts-control input {
+    color: #f3f4f6 !important; 
+}
+
+/* 2. Estilo do Dropdown (A lista de resultados) */
+.dark .ts-dropdown {
+    background-color: #1f2937 !important; /* gray-800 */
+    border-color: #374151 !important;
+    color: #d1d5db !important;
+}
+
+/* Itens da lista no Dark Mode */
+.dark .ts-dropdown .option {
+    color: #d1d5db !important;
+}
+
+/* Quando passa o mouse ou seleciona um item */
+.dark .ts-dropdown .active {
+    background-color: #ea580c !important; /* Laranja MecaniCarX */
+    color: #ffffff !important;
+}
+
+/* 3. Feedback de "Nenhum resultado" e "Carregando" */
+.dark .ts-dropdown .no-results,
+.dark .ts-dropdown .optgroup-header {
+    background-color: #1f2937 !important;
+    color: #9ca3af !important;
+}
+
+/* Borda Laranja no Foco */
+.ts-wrapper.focus .ts-control {
+    border-color: #ea580c !important;
+    box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.2) !important;
+}
+.ts-control {
+@apply bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 rounded-xl !important;
+padding: 0.6rem !important;
+}
+
+.dark .ts-dropdown {
+@apply bg-gray-900 border-gray-700 text-gray-300 !important;
+}
+
+.dark .ts-dropdown .active {
+@apply bg-orange-600 text-white !important;
+}
+
+.ts-wrapper.focus .ts-control {
+@apply ring-2 ring-orange-500 border-orange-500 !important;
+}
+
+    /* Estilo Geral MecaniCarX */
+    .ts-wrapper .ts-control {
+        @apply bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 rounded-xl !important;
+        padding: 0.6rem !important;
+        color: #374151; /* Texto escuro no modo claro */
+    }
+
+    /* FIX DARK MODE: Texto visível ao digitar */
+    .dark .ts-wrapper .ts-control {
+        background-color: #111827 !important; /* gray-900 */
+        color: #f3f4f6 !important; /* gray-100 */
+    }
+    
+    .dark .ts-wrapper .ts-control input {
+        color: #f3f4f6 !important;
+    }
+
+    .dark .ts-dropdown {
+        background-color: #1f2937 !important; /* gray-800 */
+        border-color: #374151 !important;
+        color: #d1d5db !important;
+    }
+
+    .dark .ts-dropdown .active {
+        background-color: #ea580c !important; /* orange-600 */
+        color: white !important;
+    }
+
+    /* Borda laranja no foco */
+    .ts-wrapper.focus .ts-control {
+        @apply ring-2 ring-orange-500 border-orange-500 !important;
+    }
