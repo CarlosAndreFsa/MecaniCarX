@@ -10,7 +10,6 @@ class CustomerController extends Controller
 {
     public function index(Request $request)
     {
-      
         $customers = Customer::where('company_id', $request->user()->company_id)->get();
 
          return view('customer.index', compact('customers'));
@@ -125,4 +124,19 @@ class CustomerController extends Controller
     protected $casts = [
         'active' => 'boolean',
         ];
+
+    public function search(Request $request)
+    {
+        $term = $request->get('q');
+
+        // Busca rápida apenas na empresa do usuário logado
+        $customers = Customer::where('company_id', auth()->user()->company_id)
+            ->where('name', 'LIKE', "%{$term}%")
+            ->select('id', 'name')
+            ->orderBy('name')
+            ->limit(15) // Velocidade: nunca carregue mais que o necessário
+            ->get();
+
+        return response()->json($customers);
+    }
 }

@@ -18,13 +18,11 @@ class EnsureUserHasRole
     {
         $user = $request->user();
 
-        $user = $request->user();
-
         if (! $user) {
-            abort(403);
-        }
+            return redirect()->route('login');        
+        }   
 
-        if (! in_array($user->role, $roles, true)) {
+        if (! in_array($user->role, $roles)) {
             abort(403, 'Usuário sem permissão');
         }
 

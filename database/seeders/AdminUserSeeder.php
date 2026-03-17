@@ -16,12 +16,13 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         $company = Company::factory()->create([
-            'name' => 'Oficina Demo',
+            'name' => 'Oficina MecaniCarX',
         ]);
 
         User::factory()->create([
             'company_id' => $company->id,
             'name' => 'Admin',
+            'role' => 'super-admin',
             'email' => 'admin@mecanicarx.com.br',
             'password' => Hash::make('password'),
         ]);
