@@ -51,6 +51,7 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
+
         $companyId = auth()->user()->company_id;
 
         $data = $request->validate([

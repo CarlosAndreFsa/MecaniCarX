@@ -54,7 +54,7 @@
                 
                 <div class="px-6 py-4 bg-gray-50/50 dark:bg-gray-900/30 border-t border-gray-100 dark:border-gray-700 flex justify-end">
                     <a href="{{ route('vehicles.index') }}" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition shadow-sm">
-                        Voltar para Lista
+                        Voltar
                     </a>
                 </div>
             </div>
