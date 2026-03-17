@@ -38,6 +38,10 @@ class VehicleController extends Controller
      */
     public function create()
     {
+         if ($vehicle->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         $companyId = auth()->user()->company_id;
         
         $customers = Customer::where('company_id', $companyId)->orderBy('name')->get();
@@ -51,6 +55,10 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
+         if ($vehicle->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         $companyId = auth()->user()->company_id;
 
         $data = $request->validate([
