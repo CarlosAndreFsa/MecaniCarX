@@ -43,8 +43,8 @@ Route::middleware(['auth',
     Route::put('customer/{customer}', [CustomerController::class, 'update'])->name('customer.update');
     Route::get('customer/{customer}/show', [CustomerController::class, 'show'])->name('customer.show');
     Route::get('/customers/search', [CustomerController::class, 'search'])->name('customers.search');
+    Route::get('/api/customers/{customer}/vehicles', [CustomerController::class, 'getVehicles'])->name('customers.vehicles');
     Route::delete('customer/{customer}', [CustomerController::class, 'destroy'])->name('customer.destroy');
-
 
     //VEHICLE
     Route::get('vehicles/', [VehicleController::class, 'index'])->name('vehicles.index');
@@ -66,6 +66,8 @@ Route::middleware(['auth',
     Route::get('service-orders/{service_order}/show', [ServiceOrderController::class, 'show'])->name('service-orders.show');
     Route::delete('service-orders/{service_order}', [ServiceOrderController::class, 'destroy'])->name('service-orders.destroy');
     Route::get('service-orders/{service_order}/pdf', [ServiceOrderController::class, 'generatePdf'])->name('service-orders.pdf');
+    Route::get('/service-orders/{service_order}/print', [ServiceOrderController::class, 'print'])
+    ->name('service-orders.print');
 
 });
 

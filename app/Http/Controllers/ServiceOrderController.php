@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\ServiceOrder;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ServiceOrderController extends Controller
 {
@@ -14,18 +15,18 @@ class ServiceOrderController extends Controller
      */
     public function index(Request $request)
     {
-        $query = ServiceOrder::query()->with(['customer', 'vehicle']);
+        $query = ServiceOrder::query()->with(['customer', 'vehicle'])->where('company_id', $request->user()->company_id);
 
         // Filtro de busca (Número ou Nome do Cliente)
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('number', 'like', "%{$search}%")
-                ->orWhereRelation('vehicle', 'plate', 'like', "%{$search}%")
-                ->orWhere('customer_id', $search) // Busca exata por ID do cliente
-                ->orWhereHas('customer', function($customerQuery) use ($search) {
-                    $customerQuery->where('name', 'like', "%{$search}%");
-                });
+                    ->orWhereRelation('vehicle', 'plate', 'like', "%{$search}%")
+                    ->orWhere('customer_id', $search) // Busca exata por ID do cliente
+                    ->orWhereHas('customer', function ($customerQuery) use ($search) {
+                        $customerQuery->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -36,7 +37,7 @@ class ServiceOrderController extends Controller
 
         $orders = $query->latest()->paginate(10)->withQueryString();
 
-            return view('serviceOrder.index', compact('orders'));
+        return view('serviceOrder.index', compact('orders'));
     }
 
     /**
@@ -52,9 +53,17 @@ class ServiceOrderController extends Controller
      */
     public function store(Request $request)
     {
+        $companyId = $request->user()->company_id;
+
         $data = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
-            'vehicle_id' => 'required|exists:vehicles,id',
+            'customer_id' => [
+                'required',
+                Rule::exists('customers', 'id')->where('company_id', $companyId),
+            ],
+            'vehicle_id' => [
+                'required',
+                Rule::exists('vehicles', 'id')->where('company_id', $companyId),
+            ],
             'title' => 'required|string|max:255',
             'technical_description' => 'nullable|string',
             'customer_description' => 'required|string',
@@ -67,6 +76,7 @@ class ServiceOrderController extends Controller
         $data['parts_cost'] = floatval($data['parts_cost'] ?? 0);
         $data['number'] = 'OS-' . now()->timestamp;
         $data['total'] = ($data['labor_cost'] ?? 0) + ($data['parts_cost'] ?? 0);
+        $data['company_id'] = $companyId;
 
         ServiceOrder::create($data);
 
@@ -80,6 +90,10 @@ class ServiceOrderController extends Controller
      */
     public function show(ServiceOrder $service_order)
     {
+        if ($service_order->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         $service_order->load(['customer', 'vehicle']);
 
         return view('serviceOrder.show', compact('service_order'));
@@ -90,8 +104,12 @@ class ServiceOrderController extends Controller
      */
     public function edit(ServiceOrder $service_order)
     {
+        if ($service_order->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         $customers = Customer::where('company_id', auth()->user()->company_id)->get();
-        return view('serviceOrder.edit',compact('service_order','customers'));
+        return view('serviceOrder.edit', compact('service_order', 'customers'));
     }
 
     /**
@@ -99,9 +117,21 @@ class ServiceOrderController extends Controller
      */
     public function update(Request $request, ServiceOrder $service_order)
     {
+        if ($service_order->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
+        $companyId = $request->user()->company_id;
+
         $data = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
-            'vehicle_id' => 'required|exists:vehicles,id',
+            'customer_id' => [
+                'required',
+                Rule::exists('customers', 'id')->where('company_id', $companyId),
+            ],
+            'vehicle_id' => [
+                'required',
+                Rule::exists('vehicles', 'id')->where('company_id', $companyId),
+            ],
             'title' => 'required|string|max:255',
             'customer_description'   => 'required|string',
             'technical_description'   => 'nullable|string',
@@ -113,21 +143,24 @@ class ServiceOrderController extends Controller
         ]);
         $data['labor_cost'] = floatval($data['labor_cost'] ?? 0);
         $data['parts_cost'] = floatval($data['parts_cost'] ?? 0);
-        $data['number'] = 'OS-' . now()->timestamp;
         $data['total'] = ($data['labor_cost'] ?? 0) + ($data['parts_cost'] ?? 0);
 
         $service_order->update($data);
 
         return redirect()
             ->route('service-orders.index')
-            ->with('edit', 'Ordem de serviço criada com sucesso!');
+            ->with('edit', 'Ordem de serviço atualizada com sucesso!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-   public function destroy(ServiceOrder $service_order)
+    public function destroy(ServiceOrder $service_order)
     {
+        if ($service_order->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         // 1. Opcional: Verificar se a OS pode ser excluída (ex: não excluir se estiver 'concluída')
         if ($service_order->status === 'completed') {
             return redirect()->back()->with('error', 'Não é possível excluir uma ordem concluída.');
@@ -138,24 +171,53 @@ class ServiceOrderController extends Controller
 
         // 3. Redirecionar com mensagem de sucesso
         return redirect()->route('service-orders.index')
-                        ->with('delete', 'Ordem de serviço removida com sucesso!');
+            ->with('delete', 'Ordem de serviço removida com sucesso!');
     }
     public function generatePdf(ServiceOrder $service_order)
     {
-        // Carrega a view específica para o PDF (vamos criar abaixo)
-       $html = view('serviceOrder.pdf', compact('service_order'))->render();
-    
-    // Força a conversão de entidades HTML para garantir os acentos
-    $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+        // Validação de Segurança (Multi-tenant)
+        if ($service_order->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
 
-    $pdf = Pdf::loadHTML($html)
-              ->setPaper('a4')
-              ->setOptions([
-                  'defaultFont' => 'DejaVu Sans', // Esta fonte é a melhor para acentos
-                  'isHtml5ParserEnabled' => true,
-              ]);
-    
-        // Retorna o PDF para o navegador (download ou visualização)
-        return $pdf->stream("OS-{$service_order->number}.pdf");
+        // 1. Tratamento da Logo (Busca na pasta public/images/)
+        $logoPath = public_path('assets/img/logo-mecanicarx.png');
+        $logoBase64 = null;
+
+        if (file_exists($logoPath)) {
+            $logoData = base64_encode(file_get_contents($logoPath));
+            $logoType = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $logoBase64 = 'data:image/' . $logoType . ';base64,' . $logoData;
+        }
+
+        // 2. Renderização da View (Ajustado para service-orders.pdf)
+        // Usamos o render() para poder aplicar o mb_convert_encoding logo depois
+        $html = view('serviceOrder.pdf', compact('service_order', 'logoBase64'))->render();
+
+        // 3. Tratamento de Acentuação e Caracteres Especiais
+        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
+        // 4. Configuração do DomPDF
+        return \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'defaultFont' => 'DejaVu Sans', // Garante suporte a R$ e acentos
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ])
+            ->stream("OS-{$service_order->number}.pdf");
     }
+    public function print(ServiceOrder $service_order)
+{
+    if ($service_order->company_id !== auth()->user()->company_id) abort(403);
+
+    // Mesma lógica da logo para a impressão do navegador
+    $logoPath = public_path('assets/img/logo-mecanicarx.png'); 
+    $logoBase64 = null;
+    if (file_exists($logoPath)) {
+        $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+    }
+
+    return view('serviceOrder.print', compact('service_order', 'logoBase64'));
+}
 }
