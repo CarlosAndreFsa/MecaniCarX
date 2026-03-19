@@ -87,7 +87,7 @@
                                 </td>
                                 <td class="p-4">
                                     <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ $service_order->customer->name }}</div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ $service_order->vehicle_plate ?? 'S/ Veículo' }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ $service_order->vehicle->plate ?? 'S/ Veículo' }}</div>
                                 </td>
                                 <td class="p-4 text-sm text-gray-600 dark:text-gray-400">
                                     {{ \Carbon\Carbon::parse($service_order->entry_date)->format('d/m/Y') }}
@@ -112,7 +112,7 @@
                                     </span>
                                 </td>
                                 <td class="p-4 text-sm text-gray-600 dark:text-gray-400 text-center">
-                                   {{ $service_order->vehicle->plate ?? 'S/ Modelo' }}
+                                   {{ $service_order->vehicle->model ?? 'S/ Modelo' }}
                                 <td class="p-4">
                                     <div class="flex justify-center gap-2">
                                         <a href="{{ route('service-orders.show', $service_order) }}" class="p-2 text-gray-400 hover:text-orange-600 transition-colors" title="Ver">
