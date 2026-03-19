@@ -174,45 +174,36 @@ class ServiceOrderController extends Controller
             ->with('delete', 'Ordem de serviço removida com sucesso!');
     }
     public function generatePdf(ServiceOrder $service_order)
-    {
-        // Validação de Segurança (Multi-tenant)
-        if ($service_order->company_id !== auth()->user()->company_id) {
-            abort(403, 'Acesso não autorizado.');
-        }
-
-        // 1. Tratamento da Logo (Busca na pasta public/images/)
-        $logoPath = public_path('assets/img/logo-mecanicarx.png');
-        $logoBase64 = null;
-
-        if (file_exists($logoPath)) {
-            $logoData = base64_encode(file_get_contents($logoPath));
-            $logoType = pathinfo($logoPath, PATHINFO_EXTENSION);
-            $logoBase64 = 'data:image/' . $logoType . ';base64,' . $logoData;
-        }
-
-        // 2. Renderização da View (Ajustado para service-orders.pdf)
-        // Usamos o render() para poder aplicar o mb_convert_encoding logo depois
-        $html = view('serviceOrder.pdf', compact('service_order', 'logoBase64'))->render();
-
-        // 3. Tratamento de Acentuação e Caracteres Especiais
-        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
-
-        // 4. Configuração do DomPDF
-        return \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)
-            ->setPaper('a4', 'portrait')
-            ->setOptions([
-                'defaultFont' => 'DejaVu Sans', // Garante suporte a R$ e acentos
-                'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled' => true,
-            ])
-            ->stream("OS-{$service_order->number}.pdf");
+{
+    if ($service_order->company_id !== auth()->user()->company_id) {
+        abort(403);
     }
-    public function print(ServiceOrder $service_order)
+
+    // Busca a logo e converte para Base64 (Obrigatório para PDF)
+    $logoPath = public_path('/assets/img/logo-mecanicarx.png'); 
+    $logoBase64 = null;
+    if (file_exists($logoPath)) {
+        $logoData = base64_encode(file_get_contents($logoPath));
+        $logoBase64 = 'data:image/png;base64,' . $logoData;
+    }
+
+    // Para o PDF (Download/Stream)
+    $html = view('serviceOrder.pdf', compact('service_order', 'logoBase64'))->render();
+    $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
+    return \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)
+        ->setPaper('a4', 'portrait')
+        ->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+        ->stream("OS-{$service_order->number}.pdf");
+}
+
+public function print(ServiceOrder $service_order)
 {
     if ($service_order->company_id !== auth()->user()->company_id) abort(403);
 
     // Mesma lógica da logo para a impressão do navegador
-    $logoPath = public_path('assets/img/logo-mecanicarx.png'); 
+    $logoPath = public_path('/assets/img/logo-mecanicarx.png'); 
+  
     $logoBase64 = null;
     if (file_exists($logoPath)) {
         $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));

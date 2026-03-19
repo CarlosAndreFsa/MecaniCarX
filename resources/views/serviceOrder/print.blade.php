@@ -27,9 +27,7 @@
                     @if($logoBase64)
                         <img src="{{ $logoBase64 }}" class="logo">
                     @else
-                        <div style="background:#ea580c; color:white; width:70px; height:70px; line-height:70px; text-align:center; font-weight:bold; border-radius:8px; font-size:20px;">
-                            MX
-                        </div>
+                        <div style="background:#ea580c; color:white; width:70px; height:70px; line-height:70px; text-align:center; font-weight:bold; border-radius:8px; font-size:20px;">MX</div>
                     @endif
                 </td>
                 <td>
