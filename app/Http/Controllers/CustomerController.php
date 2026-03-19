@@ -8,13 +8,37 @@ use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
+        /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
-        $customers = Customer::where('company_id', $request->user()->company_id)->get();
+        // Inicia a query garantindo que o usuário só veja clientes da sua própria empresa
+        $query = Customer::query()->where('company_id', $request->user()->company_id);
 
-         return view('customer.index', compact('customers'));
+        // Filtro de Busca (Nome, Email, Telefone ou Documento)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('name_fantasy', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('cpf_cnpj', 'like', "%{$search}%");
+            });
+        }
 
+        // Filtro de Status (Ativo / Inativo)
+        if ($request->status === '0' || $request->status === '1') {
+            $query->where('active', $request->status);
+        }
+
+        // Ordena pelos mais recentes, pagina (ex: 10 por página) e mantém a querystring na paginação
+        $customers = $query->latest()->paginate(10)->withQueryString();
+
+        return view('customer.index', compact('customers'));
     }
+
 
     public function show(Customer $customer)
     {
@@ -127,7 +151,7 @@ class CustomerController extends Controller
 
     public function search(Request $request)
     {
-        $term = $request->get('q');
+        $term = $request->get('qsearch');
 
         // Busca rápida apenas na empresa do usuário logado
         $customers = Customer::where('company_id', auth()->user()->company_id)

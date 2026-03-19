@@ -1,142 +1,124 @@
 <x-app-layout>
-    <form method="POST" action="{{ route('customer.store') }}" class="space-y-6">
-        @csrf
+    <x-slot name="header">
+        <div class="flex justify-between items-center px-4 md:px-8">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white tracking-tight">
+                    Cadastrar Cliente
+                </h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium italic">Adicione um novo cliente à sua oficina</p>
+            </div>
 
-        <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold">Cadastrar Cliente</h2>
-                <div class="flex justify-end gap-2 pt-2">
-                    <a href="{{ route('customer.index') }}"
-                        class="px-4 py-2 border rounded">
-                            Cancelar
-                    </a>
-                <button type="submit"
-                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                    Salvar
+            <div class="flex gap-3">
+                <a href="{{ route('customer.index') }}"
+                   class="px-5 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition font-semibold text-sm shadow-sm">
+                    Cancelar
+                </a>
+                <button type="submit" form="main-form"
+                        class="px-5 py-2 bg-orange-600 text-white rounded-xl hover:bg-orange-700 shadow-lg shadow-orange-600/20 transition font-bold text-sm">
+                    Salvar Cliente
                 </button>
             </div>
         </div>
+    </x-slot>
 
-        {{-- DADOS DA Cliente --}}
-        <div class="bg-white shadow rounded p-6">
-            <h3 class="font-semibold text-gray-700 mb-4">Informações Gerais</h3>
+    <div class="pt-4 pb-8 w-full max-w-7xl mx-auto">
+        <div class="px-4 md:px-8">
+            <form id="main-form" method="POST" action="{{ route('customer.store') }}" class="space-y-6">
+                @csrf
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {{-- DADOS GERAIS --}}
+                <div class="bg-white dark:bg-gray-800 border rounded-2xl shadow-sm p-6 border-gray-100 dark:border-gray-700">
+                    <h3 class="text-lg font-bold text-gray-700 dark:text-gray-200 mb-6 border-b dark:border-gray-700 pb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        Informações Gerais
+                    </h3>
 
-                <div>
-                    <label class="text-sm text-gray-600">Razão Social</label>
-                    <input type="text" name="name"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('name') }}">
-                    @error('name') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Razão Social / Nome</label>
+                            <input type="text" name="name" value="{{ old('name') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                            @error('name') <p class="text-red-600 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Nome Fantasia</label>
+                            <input type="text" name="name_fantasy" value="{{ old('name_fantasy') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">CPF / CNPJ</label>
+                            <input type="text" name="cpf_cnpj" value="{{ old('cpf_cnpj') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                            <input type="email" name="email" value="{{ old('email') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Telefone</label>
+                            <input type="text" name="phone" value="{{ old('phone') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Website</label>
+                            <input type="text" name="website" value="{{ old('website') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="text-sm text-gray-600">Nome Fantasia</label>
-                    <input type="text" name="name_fantasy"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('name_fantasy') }}">
-                </div>
+                {{-- ENDEREÇO --}}
+                <div class="bg-white dark:bg-gray-800 border rounded-2xl shadow-sm p-6 border-gray-100 dark:border-gray-700">
+                    <h3 class="text-lg font-bold text-gray-700 dark:text-gray-200 mb-6 border-b dark:border-gray-700 pb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Endereço
+                    </h3>
 
-                <div>
-                    <label class="text-sm text-gray-600">CPF / CNPJ</label>
-                    <input type="text" name="cpf_cnpj"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('cpf_cnpj') }}">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Rua / Logradouro</label>
+                            <input type="text" name="address[street]" value="{{ old('address.street') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Número</label>
+                            <input type="text" name="address[number]" value="{{ old('address.number') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Bairro</label>
+                            <input type="text" name="address[district]" value="{{ old('address.district') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Cidade</label>
+                            <input type="text" name="address[city]" value="{{ old('address.city') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Estado</label>
+                            <input type="text" name="address[state]" value="{{ old('address.state') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">CEP</label>
+                            <input type="text" name="address[zip_code]" value="{{ old('address.zip_code') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Complemento</label>
+                            <input type="text" name="address[complement]" value="{{ old('address.complement') }}"
+                                class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm text-sm">
+                        </div>
+                    </div>
                 </div>
-
-                <div>
-                    <label class="text-sm text-gray-600">Email</label>
-                    <input type="email" name="email"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('email') }}">
-                </div>
-
-                <div>
-                    <label class="text-sm text-gray-600">Telefone</label>
-                    <input type="text" name="phone"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('phone') }}">
-                </div>
-
-                <div>
-                    <label class="text-sm text-gray-600">Website</label>
-                    <input type="text" name="website"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('website') }}">
-                </div>
-
-            </div>
+            </form>
         </div>
-
-        {{-- ENDEREÇO --}}
-        <div class="bg-white shadow rounded p-6">
-            <h3 class="font-semibold text-gray-700 mb-4">Endereço</h3>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                <div>
-                    <label class="text-sm text-gray-600">Rua</label>
-                    <input type="text" name="address[street]"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('address.street') }}">
-                </div>
-
-                <div>
-                    <label class="text-sm text-gray-600">Número</label>
-                    <input type="text" name="address[number]"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('address.number') }}">
-                </div>
-
-                <div>
-                    <label class="text-sm text-gray-600">Bairro</label>
-                    <input type="text" name="address[district]"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('address.district') }}">
-                </div>
-
-                <div>
-                    <label class="text-sm text-gray-600">Cidade</label>
-                    <input type="text" name="address[city]"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('address.city') }}">
-                </div>
-
-                <div>
-                    <label class="text-sm text-gray-600">Estado</label>
-                    <input type="text" name="address[state]"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('address.state') }}">
-                </div>
-
-                <div>
-                    <label class="text-sm text-gray-600">CEP</label>
-                    <input type="text" name="address[zip_code]"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('address.zip_code') }}">
-                </div>
-
-                <div class="md:col-span-2">
-                    <label class="text-sm text-gray-600">Complemento</label>
-                    <input type="text" name="address[complement]"
-                        class="w-full border rounded px-3 py-2 text-sm"
-                        value="{{ old('address.complement') }}">
-                </div>
-
-            </div>
-        </div>
-        <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold">Cadastrar Cliente</h2>
-                <div class="flex justify-end gap-2 pt-2">
-                    <a href="{{ route('customer.index') }}"
-                        class="px-4 py-2 border rounded">
-                            Cancelar
-                    </a>
-                <button type="submit"
-                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                    Salvar
-                </button>
-            </div>
-        </div>
-    </form>
+    </div>
 </x-app-layout>
