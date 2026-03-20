@@ -31,7 +31,7 @@
             {{-- Veículos --}}
             <div class="p-5 bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 rounded-xl">
                 <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Veículos</p>
-                <p class="text-3xl font-black text-gray-900 dark:text-white">0</p>
+                <p class="text-3xl font-black text-gray-900 dark:text-white">{{ $vehicleCount ?? 00 }}</p>
             </div>
 
             {{-- Ordens de Serviço --}}
@@ -51,7 +51,7 @@
             {{-- Faturamento --}}
             <div class="p-5 bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 rounded-xl border-l-4 border-l-green-500">
                 <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Faturamento do Mês</p>
-                <p class="text-3xl font-black text-gray-900 dark:text-white">R$ 0,00</p>
+                <p class="text-3xl font-black text-gray-900 dark:text-white">R${{ number_format($serviceOrderSum ?? 0, 2, ',', '.') }}</p>
             </div>
 
             {{-- Ordens Abertas --}}

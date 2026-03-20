@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\Customer;
 use App\Models\ServiceOrder;
 use App\Models\User;
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -34,6 +35,12 @@ class DashboardController extends Controller
 
              $data['serviceOrderCount'] = ServiceOrder::where('company_id', $companyId)
             ->count();
+
+             $data['vehicleCount'] = Vehicle::where('company_id', $companyId)
+            ->count();
+
+             $data['serviceOrderSum'] = ServiceOrder::where('company_id', $companyId)
+           ->sum('total');
 
             return view('dashboards.admin', $data);
         }
