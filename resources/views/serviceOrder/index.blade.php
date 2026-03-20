@@ -33,9 +33,7 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400">Gerencie as manutenções da sua oficina</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('painel') }}" class="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition font-semibold text-sm shadow-sm">
-                    Dashboard
-                </a>
+    
                 <a href="{{ route('service-orders.create') }}"
                     class="px-5 py-2 bg-orange-600 text-white rounded-xl hover:bg-orange-700 shadow-lg shadow-orange-600/20 transition font-bold text-sm">
                     + Nova OS
@@ -76,6 +74,7 @@
                             <th class="p-4 text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Cliente</th>
                             <th class="p-4 text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Data Entrada</th>
                             <th class="p-4 text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Status</th>
+                            <th class="p-4 text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest text-center">Veículo</th>
                             <th class="p-4 text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest text-center">Ações</th>
                         </tr>
                     </thead>
@@ -88,7 +87,7 @@
                                 </td>
                                 <td class="p-4">
                                     <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ $service_order->customer->name }}</div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ $service_order->vehicle_plate ?? 'S/ Veículo' }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ $service_order->vehicle->plate ?? 'S/ Veículo' }}</div>
                                 </td>
                                 <td class="p-4 text-sm text-gray-600 dark:text-gray-400">
                                     {{ \Carbon\Carbon::parse($service_order->entry_date)->format('d/m/Y') }}
@@ -112,6 +111,8 @@
                                         {{ $labels[$service_order->status] ?? $service_order->status }}
                                     </span>
                                 </td>
+                                <td class="p-4 text-sm text-gray-600 dark:text-gray-400 text-center">
+                                   {{ $service_order->vehicle->model ?? 'S/ Modelo' }}
                                 <td class="p-4">
                                     <div class="flex justify-center gap-2">
                                         <a href="{{ route('service-orders.show', $service_order) }}" class="p-2 text-gray-400 hover:text-orange-600 transition-colors" title="Ver">

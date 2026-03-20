@@ -139,4 +139,16 @@ class CustomerController extends Controller
 
         return response()->json($customers);
     }
+
+    public function getVehicles(Customer $customer)
+    {
+        // Medida de segurança: Garante que o cliente pertence à empresa do usuário logado
+        if ($customer->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
+        // Retorna apenas os veículos pertencentes a esse cliente
+        return response()->json($customer->vehicles()->select(['id', 'plate', 'model'])->get());
+    }
+
 }
