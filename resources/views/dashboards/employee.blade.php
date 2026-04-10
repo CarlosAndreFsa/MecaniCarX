@@ -1,4 +1,3 @@
-<x-app-layout>
     <div class="space-y-6">
 
     <h2 class="text-xl font-semibold">
@@ -25,4 +24,3 @@
     </div>
 
 </div>
-</x-app-layout>

@@ -39,8 +39,9 @@ class DashboardController extends Controller
              $data['vehicleCount'] = Vehicle::where('company_id', $companyId)
             ->count();
 
-             $data['serviceOrderSum'] = ServiceOrder::where('company_id', $companyId)
-           ->sum('total');
+            $data['openOrdersCount'] = ServiceOrder::where('company_id', $companyId)
+            ->whereIn('status', ['open', 'in_progress'])
+            ->count();
 
             return view('dashboards.admin', $data);
         }
