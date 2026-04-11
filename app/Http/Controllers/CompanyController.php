@@ -24,7 +24,7 @@ class CompanyController extends Controller
 
     public function update(Request $request)
     {
-    dd($request   );
+
         $company = $request->user()->company;
       
       //  $this->authorize('update', $company);

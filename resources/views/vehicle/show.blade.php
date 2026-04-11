@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-bold text-2xl text-gray-800 dark:text-white tracking-tight">
-                Detalhes do Veículo: <span class="text-orange-600 uppercase">{{ $vehicle->plate }}</span>
+                  {{ __('Detalhes do Veículo:') }} <span class="text-orange-600 uppercase">{{ $vehicle->model }} - {{ $vehicle->plate }}</span>
             </h2>
             <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-xl text-sm transition-all shadow-lg hover:scale-105">
                 Editar Veículo
