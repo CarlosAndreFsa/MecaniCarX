@@ -18,7 +18,7 @@
                 @if(session($key))
                     <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
                          class="bg-white dark:bg-gray-800 border-l-4 {{ $key == 'success' ? 'border-green-500 text-green-600' : ($key == 'edit' ? 'border-blue-500 text-blue-600' : 'border-red-500 text-red-600') }} p-4 rounded-r-xl shadow-md flex justify-between items-center">
-                        <p class="text-sm font-bold">{{ session($key) }}</p>
+                        <p class="text-sm font-bold">{!! session($key) !!}</p>
                         <button @click="show = false" class="text-xl font-bold">&times;</button>
                     </div>
                 @endif

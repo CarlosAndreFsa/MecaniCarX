@@ -17,7 +17,7 @@
                      role="alert">
                     <div>
                         <p class="font-bold">{{ ucfirst($key === 'delete' ? 'Excluído' : ($key === 'error' ? 'Erro' : ($key === 'edit' ? 'Editado' : 'Sucesso'))) }}</p>
-                        <p class="text-sm">{{ session($key) }}</p>
+                        <p class="text-sm">{!! session($key) !!}</p>
                     </div>
                     <button @click="show = false" class="text-xl font-bold leading-none">&times;</button>
                 </div>
@@ -120,6 +120,13 @@
                                         <a href="{{ route('customer.edit', $customer) }}" class="p-2 text-gray-400 hover:text-blue-500 transition-colors" title="Editar">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                                         </a>
+                                        <form method="POST" action="{{ route('customer.destroy', $customer) }}" class="inline m-0 p-0" onsubmit="return confirm('Tem certeza que deseja excluir este cliente?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-2 text-gray-400 hover:text-red-600 transition-colors" title="Excluir">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

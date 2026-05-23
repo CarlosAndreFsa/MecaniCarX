@@ -24,7 +24,10 @@ class VehicleController extends Controller
             $query->where(function($q) use ($request) {
                 $q->where('plate', 'like', '%' . $request->search . '%')
                   ->orWhere('model', 'like', '%' . $request->search . '%')
-                  ->orWhere('id', $request->search);
+                  ->orWhere('id', $request->search)
+                  ->orWhereHas('customer', function ($customerQuery) use ($request) {
+                      $customerQuery->where('name', 'like', '%' . $request->search . '%');
+                  });
             });
         }
 
@@ -159,14 +162,17 @@ class VehicleController extends Controller
             abort(403, 'Acesso não autorizado.');
         }
 
-        // Aqui você pode adicionar verificação se o veículo possui Ordens de Serviço (OS) antes de deletar
-        if ($vehicle->serviceOrders()->exists()) {
-             return redirect()->route('vehicles.index')->with('error', 'Não é possível excluir este veículo pois ele possui ordens de serviço vinculadas.');
+        $osCount = $vehicle->serviceOrders()->count();
+
+        if ($osCount > 0) {
+            $url = route('service-orders.index', ['search' => $vehicle->plate]);
+            return redirect()->route('vehicles.index')
+                ->with('error', 'Não é possível excluir este veículo, pois ele possui <a href="' . $url . '" class="underline font-black hover:text-red-900">' . $osCount . ' ordem(ns) de serviço</a> vinculada(s).');
         }
 
         $vehicle->delete();
 
-        return redirect()->route('vehicle.index')->with('delete', 'Veículo removido com sucesso!');
+        return redirect()->route('vehicles.index')->with('delete', 'Veículo removido com sucesso!');
     }
 
 }

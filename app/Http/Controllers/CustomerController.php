@@ -147,10 +147,12 @@ class CustomerController extends Controller
             abort(403, 'Acesso não autorizado.');
         }
 
-        // Verifica se o cliente possui veículos vinculados antes de deletar
-        if ($customer->vehicles()->exists()) {
+        $vehicleCount = $customer->vehicles()->count();
+
+        if ($vehicleCount > 0) {
+            $url = route('vehicles.index', ['search' => $customer->name]);
             return redirect()->route('customer.index')
-                ->with('error', 'Não é possível excluir este cliente, pois ele possui veículos vinculados.');
+                ->with('error', 'Não é possível excluir este cliente, pois ele possui <a href="' . $url . '" class="underline font-black hover:text-red-900">' . $vehicleCount . ' veículo(s)</a> vinculado(s).');
         }
 
         $customer->delete();
