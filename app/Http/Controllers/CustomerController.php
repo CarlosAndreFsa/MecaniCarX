@@ -42,7 +42,9 @@ class CustomerController extends Controller
 
     public function show(Customer $customer)
     {
-      //  $customer = Customer::find($request->id);
+        if ($customer->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
 
         return view('customer.show', compact('customer'));
     }
@@ -54,7 +56,6 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
-
         $data = $request->validate([
             'name'         => 'required|string|max:255',
             'name_fantasy' => 'nullable|string|max:255',
@@ -96,13 +97,19 @@ class CustomerController extends Controller
 
     public function edit(Customer $customer)
     {
-       //   $customer = Customer::where('company_id', auth()->user()->company_id)->get();
+        if ($customer->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
           
         return view('customer.edit', compact('customer'));
     }
 
     public function update(Request $request, Customer $customer)
     {
+        if ($customer->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         $data = $request->validate([
             'name'         => 'required|string|max:255',
             'name_fantasy' => 'nullable|string|max:255',
@@ -130,16 +137,34 @@ class CustomerController extends Controller
         }
         return redirect()
         ->route('customer.index')
-        ->with('success', 'Cliebte atualizada com sucesso!');
+        ->with('success', 'Cliente atualizado com sucesso!');
         
     }
 
-    public function delete()
+    public function destroy(Customer $customer)
     {
-        
+         if ($customer->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
+        // Verifica se o cliente possui veículos vinculados antes de deletar
+        if ($customer->vehicles()->exists()) {
+            return redirect()->route('customer.index')
+                ->with('error', 'Não é possível excluir este cliente, pois ele possui veículos vinculados.');
+        }
+
+        $customer->delete();
+
+        return redirect()->route('customer.index')
+            ->with('delete', 'Cliente removido com sucesso!');
     }
+    
     public function active (Customer $customer)
     {
+        if ($customer->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         $customer->update(['active' => ! $customer->active]);
 
         return back();
