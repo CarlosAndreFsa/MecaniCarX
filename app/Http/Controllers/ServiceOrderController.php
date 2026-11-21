@@ -15,7 +15,7 @@ class ServiceOrderController extends Controller
      */
     public function index(Request $request)
     {
-        $query = ServiceOrder::query()->with(['customer', 'vehicle'])->where('company_id', $request->user()->company_id);
+        $query = ServiceOrder::query()->with(['customer', 'vehicle'])->where('company_id', $request->user()->company_id);       
 
         if ($request->user()->role === 'client') {
             abort_if(
@@ -41,9 +41,15 @@ class ServiceOrderController extends Controller
 
         // Filtro de Status
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            
+             // Se vier '?status=open' na URL, filtra apenas as abertas e em andamento
+            if ($request->status === 'open') {
+                $query->whereIn('status', ['open', 'in_progress']);
+            }else {
+                $query->where('status', $request->status);
+            }
         }
-
+      
         $orders = $query->latest()->paginate(10)->withQueryString();
 
         return view('serviceOrder.index', compact('orders'));

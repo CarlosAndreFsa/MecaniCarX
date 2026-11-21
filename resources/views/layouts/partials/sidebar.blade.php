@@ -1,5 +1,5 @@
-<aside class="w-64 min-h-screen bg-gray-800 text-white p-4">
-    <h2 class="text-lg font-bold mb-4">
+<aside class="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-colors duration-300">
+        <h2 class="text-lg font-bold mb-4">
         Painel
     </h2>
 

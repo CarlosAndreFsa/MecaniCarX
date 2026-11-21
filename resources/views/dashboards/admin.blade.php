@@ -31,7 +31,11 @@
             {{-- Veículos --}}
             <div class="p-5 bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 rounded-xl">
                 <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Veículos</p>
-                <p class="text-3xl font-black text-gray-900 dark:text-white">{{ $vehicleCount ?? 00 }}</p>
+                 <a href="{{ route('vehicles.index') }}" class="group">
+                    <p class="text-3xl font-black text-gray-900 dark:text-white group-hover:text-orange-600 transition">
+                        {{ $vehicleCount ?? 00 }}
+                    </p>
+                 </a>
             </div>
 
             {{-- Ordens de Serviço --}}
@@ -55,9 +59,13 @@
             </div>
 
             {{-- Ordens Abertas --}}
-            <div class="p-5 bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 rounded-xl border-l-4 border-l-orange-500">
+            <div class="p-5 bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 rounded-xl ">
                 <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Ordens Abertas</p>
-                <p class="text-3xl font-black text-gray-900 dark:text-white">0</p>
+                 <a href="{{ route('service-orders.index', ['status' => 'open']) }}" class="group">
+                    <p class="text-3xl font-black text-gray-900 dark:text-white group-hover:text-orange-600 transition">
+                        {{ $openOrdersCount ?? 0 }}
+                    </p>
+                 </a>
             </div>
 
             {{-- Empresa --}}
