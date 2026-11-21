@@ -10,11 +10,28 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::where('company_id', $request->user()->company_id)
-            ->where('role', '!=', 'client')
-            ->get();
+        $query = User::query()
+            ->where('company_id', $request->user()->company_id);
+            //->where('role', '!=', 'client');
 
-            return view('users.index', compact('users'));
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('role', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->has('status') && ($request->status === '0' || $request->status === '1')) {
+            $query->where('active', $request->status);
+        } elseif (! $request->has('status')) {
+            $query->where('active', true);
+        }
+
+        $users = $query->latest()->paginate(10)->withQueryString();
+
+        return view('users.index', compact('users'));
 
     }
 
@@ -68,12 +85,6 @@ class UserController extends Controller
     {
       
          $this->authorizeUser($user);
-
-         abort_if(
-            $user->role === 'super-admin' && (bool) $data['active'] === false,
-            403,
-            'O usuário Super Admin não pode ser desativado.'
-        );
         $user->update(['active' => ! $user->active]);
 
         return back();
