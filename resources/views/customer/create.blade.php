@@ -73,6 +73,23 @@
                     </div>
                 </div>
 
+                {{-- ACESSO DO CLIENTE --}}
+                <div class="bg-white dark:bg-gray-800 border rounded-2xl shadow-sm p-6 border-gray-100 dark:border-gray-700">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="create-user" name="create_user" value="1" @checked(old('create_user', true))
+                            class="mt-1 w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500">
+                        <div>
+                            <span class="block text-sm font-bold text-gray-700 dark:text-gray-300">Criar usuário de acesso para este cliente</span>
+                            <span class="block text-xs text-gray-500 dark:text-gray-400 mt-1">O usuário terá acesso somente aos veículos vinculados ao cliente.</span>
+                        </div>
+                    </label>
+
+                    <div id="client-user-fields" class="mt-5 hidden">
+                        @error('email') <p class="text-red-600 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Uma senha temporária será gerada e enviada para o email informado acima. Ela também será exibida após confirmar o cadastro.</p>
+                    </div>
+                </div>
+
                 {{-- ENDEREÇO --}}
                 <div class="bg-white dark:bg-gray-800 border rounded-2xl shadow-sm p-6 border-gray-100 dark:border-gray-700">
                     <h3 class="text-lg font-bold text-gray-700 dark:text-gray-200 mb-6 border-b dark:border-gray-700 pb-2 flex items-center gap-2">
@@ -121,4 +138,19 @@
             </form>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkbox = document.getElementById('create-user');
+            const fields = document.getElementById('client-user-fields');
+
+            if (checkbox && fields) {
+                const toggleFields = () => fields.classList.toggle('hidden', !checkbox.checked);
+                checkbox.addEventListener('change', toggleFields);
+                toggleFields();
+            }
+        });
+    </script>
+    @endpush
 </x-app-layout>

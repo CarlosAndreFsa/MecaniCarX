@@ -49,8 +49,10 @@
                         <svg x-show="sidebarOpen" :class="open ? 'rotate-180' : ''" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
                     </button>
                     <div x-show="open && sidebarOpen" x-cloak class="mt-1 ml-9 space-y-1">
-                        <a href="{{ route('customer.index') }}" class="block p-2 text-sm hover:text-white transition">Clientes</a>
-                        <a href="{{ route('users.index') }}" class="block p-2 text-sm hover:text-white transition">Funcionários</a>
+                        @if (auth()->user()->role !== 'client')
+                            <a href="{{ route('customer.index') }}" class="block p-2 text-sm hover:text-white transition">Clientes</a>
+                            <a href="{{ route('users.index') }}" class="block p-2 text-sm hover:text-white transition">Funcionários</a>
+                        @endif
                         <a href="{{ route('vehicles.index') }}" class="block p-2 text-sm hover:text-white transition">Veículos</a>
                         @if (auth()->user()->role === 'super-admin')
                             <a href="{{ route('brands.index') }}" class="block p-2 text-sm hover:text-white transition">Marcas</a>                            

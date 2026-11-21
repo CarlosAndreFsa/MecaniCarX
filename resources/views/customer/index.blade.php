@@ -1,6 +1,35 @@
 <x-app-layout>
     {{-- Alertas Dinâmicos --}}
     <div class="space-y-4 mb-4 px-4 md:px-8 pt-4">
+        @if(session('temporary_password'))
+            <div x-data="{
+                     show: true,
+                     copyPassword() {
+                         navigator.clipboard.writeText(document.getElementById('temporary-password').textContent)
+                             .finally(() => this.show = false);
+                     }
+                 }"
+                 x-show="show"
+                 x-init="setTimeout(() => show = false, 15000)"
+                 x-transition:leave="transition ease-in duration-500"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 shadow-sm rounded-r-xl flex justify-between items-start"
+                 role="alert">
+                <div>
+                    <p class="font-bold">Acesso temporário criado</p>
+                    <p class="text-sm mt-1">Email: <strong>{{ session('temporary_email') }}</strong></p>
+                    <p class="text-sm">Senha temporária:
+                        <strong id="temporary-password">{{ session('temporary_password') }}</strong>
+                        <button type="button"
+                            @click="copyPassword"
+                            class="ml-2 underline font-bold">Copiar senha</button>
+                    </p>
+                </div>
+                <button type="button" @click="show = false" class="text-xl font-bold leading-none">&times;</button>
+            </div>
+        @endif
+
         @foreach (['success' => 'bg-green-100 border-green-500 text-green-700 dark:bg-green-900/30 dark:text-green-400', 
                    'edit' => 'bg-yellow-100 border-yellow-500 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', 
                    'delete' => 'bg-red-100 border-red-500 text-red-700 dark:bg-red-900/30 dark:text-red-400',

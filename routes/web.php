@@ -8,18 +8,58 @@ use App\Http\Controllers\ServiceOrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use App\Models\Customer;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Validation\Rules\Password;
 
 Route::view('/', 'home')->name('home');
 
-Route::middleware(['auth'])->get('/dashboard', [DashboardController::class, 'index'])
+Route::middleware(['auth', 'password.changed'])->get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
-Route::middleware(['auth', 'company','active'])->get('/painel', [DashboardController::class, 'index'])->name('painel');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/alterar-senha-temporaria', function () {
+        return view('auth.change-temporary-password');
+    })->name('password.change');
+
+    Route::put('/alterar-senha-temporaria', function (\Illuminate\Http\Request $request) {
+        $request->validate([
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ]);
+
+        $request->user()->update([
+            'password' => Hash::make($request->password),
+            'password_must_be_changed' => false,
+        ]);
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Senha atualizada com sucesso!');
+    })->name('password.change.update');
+});
+
+Route::get('/acesso-temporario/{user}', function (Request $request, User $user) {
+    abort_unless(
+        $user->role === 'client' && $user->active && $user->password_must_be_changed,
+        403,
+        'Este link de acesso temporário não é mais válido.'
+    );
+
+    Auth::login($user);
+    $request->session()->regenerate();
+
+    return redirect()->route('password.change');
+})->middleware(['signed', 'throttle:6,1'])->name('password.temporary-access');
+
+Route::middleware(['auth', 'company','active','password.changed'])->get('/painel', [DashboardController::class, 'index'])->name('painel');
 
 Route::middleware(['auth', 
     'company', 
     'active', 
+    'password.changed',
     'role:admin,super-admin,employee,client'])->group(function(){
    
     Route::get('/users', [UserController::class,'index'])->name('users.index');
@@ -71,7 +111,7 @@ Route::middleware(['auth',
 
 });
 
-Route::middleware(['auth', 'role:super-admin'])->group(function() {
+Route::middleware(['auth', 'password.changed', 'role:super-admin'])->group(function() {
     //BRAND (Acesso somente para Super Admin)
     Route::get('brands/', [BrandController::class, 'index'])->name('brands.index');
     Route::get('brands/create', [BrandController::class, 'create'])->name('brands.create');
@@ -83,7 +123,7 @@ Route::middleware(['auth', 'role:super-admin'])->group(function() {
 });
 
 Route::view('profile', 'profile')
-    ->middleware(['auth'])
+    ->middleware(['auth', 'password.changed'])
     ->name('profile');
 
 require __DIR__.'/auth.php';

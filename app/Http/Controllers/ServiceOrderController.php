@@ -17,6 +17,15 @@ class ServiceOrderController extends Controller
     {
         $query = ServiceOrder::query()->with(['customer', 'vehicle'])->where('company_id', $request->user()->company_id);
 
+        if ($request->user()->role === 'client') {
+            abort_if(
+                ! $request->user()->customer_id,
+                403,
+                'Usuário cliente não está vinculado a um cliente.'
+            );
+            $query->where('customer_id', $request->user()->customer_id);
+        }
+
         // Filtro de busca (Número ou Nome do Cliente)
         if ($request->filled('search')) {
             $search = $request->search;
@@ -45,6 +54,10 @@ class ServiceOrderController extends Controller
      */
     public function create()
     {
+        if (auth()->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode cadastrar ordens de serviço.');
+        }
+
         $customers = Customer::where('company_id', auth()->user()->company_id)->get();
         return view('serviceOrder.create', compact('customers'));
     }
@@ -53,6 +66,10 @@ class ServiceOrderController extends Controller
      */
     public function store(Request $request)
     {
+        if ($request->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode cadastrar ordens de serviço.');
+        }
+
         $companyId = $request->user()->company_id;
 
         $data = $request->validate([
@@ -94,6 +111,11 @@ class ServiceOrderController extends Controller
             abort(403, 'Acesso não autorizado.');
         }
 
+        if (auth()->user()->role === 'client'
+            && $service_order->customer_id !== auth()->user()->customer_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         $service_order->load(['customer', 'vehicle']);
 
         return view('serviceOrder.show', compact('service_order'));
@@ -108,6 +130,10 @@ class ServiceOrderController extends Controller
             abort(403, 'Acesso não autorizado.');
         }
 
+        if (auth()->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode editar ordens de serviço.');
+        }
+
         $customers = Customer::where('company_id', auth()->user()->company_id)->get();
         return view('serviceOrder.edit', compact('service_order', 'customers'));
     }
@@ -117,6 +143,10 @@ class ServiceOrderController extends Controller
      */
     public function update(Request $request, ServiceOrder $service_order)
     {
+        if ($request->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode editar ordens de serviço.');
+        }
+
         if ($service_order->company_id !== auth()->user()->company_id) {
             abort(403, 'Acesso não autorizado.');
         }
@@ -157,6 +187,10 @@ class ServiceOrderController extends Controller
      */
     public function destroy(ServiceOrder $service_order)
     {
+        if (auth()->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode excluir ordens de serviço.');
+        }
+
         if ($service_order->company_id !== auth()->user()->company_id) {
             abort(403, 'Acesso não autorizado.');
         }
@@ -177,6 +211,11 @@ class ServiceOrderController extends Controller
 {
     if ($service_order->company_id !== auth()->user()->company_id) {
         abort(403);
+    }
+
+    if (auth()->user()->role === 'client'
+        && $service_order->customer_id !== auth()->user()->customer_id) {
+        abort(403, 'Acesso não autorizado.');
     }
 
     // Busca a logo e converte para Base64 (Obrigatório para PDF)
@@ -200,6 +239,11 @@ class ServiceOrderController extends Controller
 public function print(ServiceOrder $service_order)
 {
     if ($service_order->company_id !== auth()->user()->company_id) abort(403);
+
+    if (auth()->user()->role === 'client'
+        && $service_order->customer_id !== auth()->user()->customer_id) {
+        abort(403, 'Acesso não autorizado.');
+    }
 
     // Mesma lógica da logo para a impressão do navegador
     $logoPath = public_path('/assets/img/logo-mecanicarx.png'); 

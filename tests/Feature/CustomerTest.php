@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Mail\ClientAccessCredentials;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -62,6 +64,38 @@ class CustomerTest extends TestCase
         ]);
 
         $response->assertRedirect(route('customer.index'));
+    }
+
+    #[Test]
+    public function creating_a_customer_creates_and_displays_temporary_client_credentials_by_default()
+    {
+        Mail::fake();
+
+        $company = Company::factory()->create();
+        $user = User::factory()->for($company)->create(['role' => 'admin', 'active' => true]);
+        $this->actingAs($user);
+
+        $formResponse = $this->get(route('customer.create'));
+        $formResponse->assertSee('id="create-user" name="create_user" value="1" checked', false);
+
+        $this->post(route('customer.store'), [
+            'name' => 'Cliente com Acesso',
+            'name_fantasy' => 'Cliente Acesso',
+            'email' => 'cliente-acesso@example.com',
+            'create_user' => '1',
+        ])->assertRedirect(route('customer.index'))
+            ->assertSessionHas('temporary_password');
+
+        $temporaryPassword = session('temporary_password');
+        Mail::assertSent(ClientAccessCredentials::class, function (ClientAccessCredentials $mail) use ($temporaryPassword) {
+            return $mail->customer->email === 'cliente-acesso@example.com'
+                && $mail->temporaryPassword === $temporaryPassword;
+        });
+
+        $this->get(route('customer.index'))
+            ->assertOk()
+            ->assertSee('Senha temporária:')
+            ->assertSee($temporaryPassword);
     }
 
     #[Test]

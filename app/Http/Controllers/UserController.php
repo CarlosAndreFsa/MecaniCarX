@@ -10,6 +10,10 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
+        if ($request->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode acessar usuários.');
+        }
+
         $query = User::query()
             ->where('company_id', $request->user()->company_id);
             //->where('role', '!=', 'client');
@@ -37,12 +41,19 @@ class UserController extends Controller
 
      public function create()
      {
+        if (auth()->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode cadastrar usuários.');
+        }
+
         return view('users.create');
 
      }
 
      public function store(Request $request)
     {
+         if ($request->user()->role === 'client') {
+             abort(403, 'Usuário cliente não pode cadastrar usuários.');
+         }
        
         $data = $request->validate([
             'name' => 'required|string',
@@ -63,12 +74,18 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        if (auth()->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode editar usuários.');
+        }
 
         return view('users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)
     {
+        if ($request->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode editar usuários.');
+        }
        
         $data = $request->validate([
             'name' => ['required', 'string'],
@@ -83,6 +100,9 @@ class UserController extends Controller
 
     public function active(User $user)
     {
+        if (auth()->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode alterar usuários.');
+        }
       
          $this->authorizeUser($user);
         $user->update(['active' => ! $user->active]);
