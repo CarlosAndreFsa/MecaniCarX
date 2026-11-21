@@ -68,6 +68,11 @@
                         </svg>
                     </button>
                     <div x-show="open && sidebarOpen" x-cloak class="mt-1 ml-9 space-y-1">
+                        @if (auth()->user()->role !== 'client')
+                            <a href="{{ route('customer.index') }}" class="block p-2 text-sm hover:text-white transition">Clientes</a>
+                            <a href="{{ route('users.index') }}" class="block p-2 text-sm hover:text-white transition">Funcionários</a>
+                        @endif
+                        <a href="{{ route('vehicles.index') }}" class="block p-2 text-sm hover:text-white transition">Veículos</a>
                         <a href="{{ route('customer.index') }}"
                             class="block p-2 text-sm hover:text-white transition">Clientes</a>
                         <a href="{{ route('users.index') }}"

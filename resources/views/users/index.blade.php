@@ -40,6 +40,28 @@
             </div>
         </div>
 
+        {{-- FILTRO --}}
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+            <form id="filter-form" action="{{ route('users.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1 relative">
+                    <input type="text"
+                        id="search-input"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Nome, Email ou Permissão..."
+                        class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 focus:border-orange-500 text-gray-700 dark:text-gray-200 transition-all">
+                </div>
+
+                <div class="w-full md:w-64">
+                    <select name="status" id="status-select" class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 focus:border-orange-500 text-gray-700 dark:text-gray-200 transition-all">
+                        <option value="" {{ request()->has('status') && request('status') === '' ? 'selected' : '' }}>Todos os Status</option>
+                        <option value="1" {{ ! request()->has('status') || request('status') == '1' ? 'selected' : '' }}>Ativo</option>
+                        <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Inativo</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
         {{-- TABELA --}}
         <div class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div class="overflow-x-auto">
@@ -89,7 +111,10 @@
                                         <form method="POST" action="{{ route('users.active', $user) }}" class="inline m-0 p-0">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="p-2 transition-colors {{ $user->active ? 'text-gray-400 hover:text-red-500' : 'text-gray-400 hover:text-green-500' }}" title="{{ $user->active ? 'Desativar' : 'Ativar' }}">
+                                            <button type="submit"
+                                                @disabled($user->role === 'super-admin')
+                                                class="p-2 transition-colors {{ $user->role === 'super-admin' ? 'text-gray-300 cursor-not-allowed' : ($user->active ? 'text-gray-400 hover:text-red-500' : 'text-gray-400 hover:text-green-500') }}"
+                                                title="{{ $user->role === 'super-admin' ? 'Super Admin protegido contra desativação' : ($user->active ? 'Desativar' : 'Ativar') }}">
                                                 @if($user->active)
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                                 @else
@@ -112,5 +137,38 @@
                 </table>
             </div>
         </div>
+
+        {{-- PAGINAÇÃO --}}
+        <div class="mt-4 px-2">
+            {{ $users->links() }}
+        </div>
     </div>
+
+    {{-- Script de Filtro --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('filter-form');
+            const searchInput = document.getElementById('search-input');
+            const statusSelect = document.getElementById('status-select');
+            let timer;
+
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    clearTimeout(timer);
+                    timer = setTimeout(() => form.submit(), 500);
+                });
+
+                if (searchInput.value !== '') {
+                    searchInput.focus();
+                    const val = searchInput.value;
+                    searchInput.value = '';
+                    searchInput.value = val;
+                }
+            }
+
+            if (statusSelect) {
+                statusSelect.addEventListener('change', () => form.submit());
+            }
+        });
+    </script>
 </x-app-layout>

@@ -20,6 +20,14 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
+        if (auth()->user()->password_must_be_changed) {
+            $this->redirectIntended(
+                default: route('password.change', absolute: false),
+                navigate: true
+            );
+            return;
+        }
+
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
 }; ?>

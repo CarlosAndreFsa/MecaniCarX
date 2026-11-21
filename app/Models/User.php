@@ -24,8 +24,10 @@ class User extends Authenticatable
         'email',
         'password',
         'company_id',
+        'customer_id',
         'role',
         'active',
+        'password_must_be_changed',
     ];
 
     /**
@@ -48,11 +50,17 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'password_must_be_changed' => 'boolean',
         ];
     }
     public function company() 
     {
         return $this->belongsTo(Company::class);        
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     // protected static function booted()

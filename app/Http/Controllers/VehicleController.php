@@ -20,6 +20,15 @@ class VehicleController extends Controller
         // Traz os relacionamentos para evitar queries N+1
         $query = Vehicle::with(['customer', 'brand'])->where('company_id', $companyId);
 
+        if (auth()->user()->role === 'client') {
+            abort_if(
+                ! auth()->user()->customer_id,
+                403,
+                'Usuário cliente não está vinculado a um cliente.'
+            );
+            $query->where('customer_id', auth()->user()->customer_id);
+        }
+
         if ($request->filled('search')) {
             $query->where(function($q) use ($request) {
                 $q->where('plate', 'like', '%' . $request->search . '%')
@@ -40,6 +49,10 @@ class VehicleController extends Controller
      */
     public function create()
     {
+        if (auth()->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode cadastrar veículos.');
+        }
+
         $companyId = auth()->user()->company_id;
         
         $customers = Customer::where('company_id', $companyId)->orderBy('name')->get();
@@ -53,6 +66,9 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode cadastrar veículos.');
+        }
 
         $companyId = auth()->user()->company_id;
 
@@ -94,6 +110,11 @@ class VehicleController extends Controller
             abort(403, 'Acesso não autorizado.');
         }
 
+        if (auth()->user()->role === 'client'
+            && $vehicle->customer_id !== auth()->user()->customer_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         $vehicle->load(['customer', 'brand']);
 
         return view('vehicle.show', compact('vehicle'));
@@ -104,6 +125,10 @@ class VehicleController extends Controller
      */
     public function edit(Vehicle $vehicle)
     {
+        if (auth()->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode editar veículos.');
+        }
+
         if ($vehicle->company_id !== auth()->user()->company_id) {
             abort(403, 'Acesso não autorizado.');
         }
@@ -120,6 +145,10 @@ class VehicleController extends Controller
      */
     public function update(Request $request, Vehicle $vehicle)
     {
+        if (auth()->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode editar veículos.');
+        }
+
         if ($vehicle->company_id !== auth()->user()->company_id) {
             abort(403, 'Acesso não autorizado.');
         }
@@ -157,6 +186,10 @@ class VehicleController extends Controller
      */
     public function destroy(Vehicle $vehicle)
     {
+        if (auth()->user()->role === 'client') {
+            abort(403, 'Usuário cliente não pode excluir veículos.');
+        }
+
         if ($vehicle->company_id !== auth()->user()->company_id) {
             abort(403, 'Acesso não autorizado.');
         }
