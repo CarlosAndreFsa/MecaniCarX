@@ -24,6 +24,8 @@ class VehicleController extends Controller
             $query->where(function($q) use ($request) {
                 $q->where('plate', 'like', '%' . $request->search . '%')
                   ->orWhere('model', 'like', '%' . $request->search . '%')
+                ->orWhereRelation('customer', 'name_fantasy', 'like', "%{$request->search}%")
+                ->orWhereRelation('brand', 'name', 'like', "%{$request->search}%")
                   ->orWhere('id', $request->search);
             });
         }
