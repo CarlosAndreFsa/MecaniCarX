@@ -17,6 +17,10 @@ class AdminUserSeeder extends Seeder
     {
         $company = Company::factory()->create([
             'name' => 'Oficina MecaniCarX',
+            'fantasy_name' => 'MecaniCarX',
+            'cnpj' => '12345678000195',
+            'email' => 'contato@mecanicarx.com.br',
+            'website' => 'https://www.mecanicarx.com.br',
         ]);
 
         User::factory()->create([
