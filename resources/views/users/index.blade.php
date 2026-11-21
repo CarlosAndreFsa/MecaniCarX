@@ -89,7 +89,10 @@
                                         <form method="POST" action="{{ route('users.active', $user) }}" class="inline m-0 p-0">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="p-2 transition-colors {{ $user->active ? 'text-gray-400 hover:text-red-500' : 'text-gray-400 hover:text-green-500' }}" title="{{ $user->active ? 'Desativar' : 'Ativar' }}">
+                                            <button type="submit"
+                                                @disabled($user->role === 'super-admin')
+                                                class="p-2 transition-colors {{ $user->role === 'super-admin' ? 'text-gray-300 cursor-not-allowed' : ($user->active ? 'text-gray-400 hover:text-red-500' : 'text-gray-400 hover:text-green-500') }}"
+                                                title="{{ $user->role === 'super-admin' ? 'Super Admin protegido contra desativação' : ($user->active ? 'Desativar' : 'Ativar') }}">
                                                 @if($user->active)
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                                 @else

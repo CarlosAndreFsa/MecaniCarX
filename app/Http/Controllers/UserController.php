@@ -69,6 +69,11 @@ class UserController extends Controller
       
          $this->authorizeUser($user);
 
+         abort_if(
+            $user->role === 'super-admin' && (bool) $data['active'] === false,
+            403,
+            'O usuário Super Admin não pode ser desativado.'
+        );
         $user->update(['active' => ! $user->active]);
 
         return back();

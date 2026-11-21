@@ -9,6 +9,8 @@ use Tests\TestCase;
 
 class UserActiveTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -17,6 +19,50 @@ class UserActiveTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
+    }
+
+    public function test_super_admin_cannot_be_deactivated(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'active' => true,
+        ]);
+
+        $superAdmin = User::factory()->create([
+            'company_id' => $admin->company_id,
+            'role' => 'super-admin',
+            'active' => true,
+        ]);
+
+        $this->actingAs($admin)
+            ->patch(route('users.active', $superAdmin))
+            ->assertForbidden();
+
+        $this->assertTrue((bool) $superAdmin->fresh()->active);
+    }
+
+    public function test_super_admin_cannot_be_deactivated_by_update(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'active' => true,
+        ]);
+
+        $superAdmin = User::factory()->create([
+            'company_id' => $admin->company_id,
+            'role' => 'super-admin',
+            'active' => true,
+        ]);
+
+        $this->actingAs($admin)
+            ->put(route('users.update', $superAdmin), [
+                'name' => $superAdmin->name,
+                'role' => 'admin',
+                'active' => false,
+            ])
+            ->assertForbidden();
+
+        $this->assertTrue((bool) $superAdmin->fresh()->active);
     }
 
     public function userAdminAtiveTest()

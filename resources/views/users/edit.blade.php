@@ -59,9 +59,9 @@
                         </div>
 
                         <div class="flex items-center mt-6">
-                            <input type="hidden" name="active" value="0">
+                            <input type="hidden" name="active" value="{{ $user->role === 'super-admin' ? 1 : 0 }}">
                             <label class="inline-flex items-center gap-3 cursor-pointer">
-                                <input type="checkbox" name="active" value="1" @checked($user->active) 
+                                <input type="checkbox" name="active" value="1" @checked($user->active) @disabled($user->role === 'super-admin')
                                     class="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Usuário está Ativo</span>
                             </label>
