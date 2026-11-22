@@ -72,9 +72,14 @@
                             </h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"> Relato do Cliente </label>
+                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                                        Relato do Cliente <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
+                                    </label>
                                     <textarea name="customer_description" rows="5"
                                               class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 text-sm">{{ old('customer_description', $service_order->customer_description) }}</textarea>
+                                    @error('customer_description')
+                                        <p class="text-red-600 text-xs mt-1 font-bold" role="alert">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"> Diagnóstico Técnico </label>
@@ -89,7 +94,7 @@
                     <div class="space-y-6">
                         {{-- STATUS E DATAS --}}
                         <div class="bg-white dark:bg-gray-800 border rounded-2xl shadow-sm p-6 border-gray-100 dark:border-gray-700">
-                            <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Gerenciamento</h3>
+                            <h3 class="text-sm font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4">Gerenciamento</h3>
                             
                             <div class="space-y-4">
                                 <div>
@@ -120,7 +125,7 @@
 
                         {{-- FINANCEIRO --}}
                         <div class="bg-white dark:bg-gray-800 border rounded-2xl shadow-sm p-6 border-gray-100 dark:border-gray-700 border-l-4 border-l-orange-600">
-                            <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Financeiro</h3>
+                            <h3 class="text-sm font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4">Financeiro</h3>
                             
                             <div class="space-y-4">
                                 <div>

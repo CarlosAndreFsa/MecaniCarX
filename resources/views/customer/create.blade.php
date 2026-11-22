@@ -77,7 +77,7 @@
                 <div class="bg-white dark:bg-gray-800 border rounded-2xl shadow-sm p-6 border-gray-100 dark:border-gray-700">
                     <label class="flex items-start gap-3 cursor-pointer">
                         <input type="checkbox" id="create-user" name="create_user" value="1" @checked(old('create_user', true))
-                            class="mt-1 w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500">
+                            class="mt-1 w-5 h-5 text-orange-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-orange-500">
                         <div>
                             <span class="block text-sm font-bold text-gray-700 dark:text-gray-300">Criar usuário de acesso para este cliente</span>
                             <span class="block text-xs text-gray-500 dark:text-gray-400 mt-1">O usuário terá acesso somente aos veículos vinculados ao cliente.</span>

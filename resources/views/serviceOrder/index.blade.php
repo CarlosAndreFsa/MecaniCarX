@@ -107,7 +107,7 @@
                                             'canceled' => 'Cancelada',
                                         ];
                                     @endphp
-                                    <span class="px-3 py-1 text-xs font-black rounded-full uppercase tracking-tighter {{ $colors[$service_order->status] ?? 'bg-gray-100 text-gray-700' }}">
+                                    <span class="px-3 py-1 text-xs font-black rounded-full uppercase tracking-tighter {{ $colors[$service_order->status] ?? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' }}">
                                         {{ $labels[$service_order->status] ?? $service_order->status }}
                                     </span>
                                 </td>

@@ -77,7 +77,7 @@ new class extends Component
         {{-- Nome --}}
         <div class="space-y-1">
             <label for="name" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
-                {{ __('Nome Completo') }} *
+                {{ __('Nome Completo') }} <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
             </label>
             <input wire:model="name" id="name" name="name" type="text" autofocus autocomplete="name"
                 class="w-full bg-gray-50 dark:bg-gray-900 border @error('name') border-red-500 @else border-gray-200 dark:border-gray-700 @enderror rounded-xl px-4 py-2.5 text-sm font-bold text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all" />
@@ -92,7 +92,7 @@ new class extends Component
         {{-- E-mail --}}
         <div class="space-y-1">
             <label for="email" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
-                {{ __('E-mail de Acesso') }} *
+                {{ __('E-mail de Acesso') }} <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
             </label>
             <input wire:model="email" id="email" name="email" type="email" autocomplete="username"
                 class="w-full bg-gray-50 dark:bg-gray-900 border @error('email') border-red-500 @else border-gray-200 dark:border-gray-700 @enderror rounded-xl px-4 py-2.5 text-sm font-bold text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all" />

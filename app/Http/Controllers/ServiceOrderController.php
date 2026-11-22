@@ -94,6 +94,8 @@ class ServiceOrderController extends Controller
             'parts_cost' => 'nullable|numeric',
             'entry_date' => 'required|date',
             'delivery_date' => 'nullable|date',
+        ], [
+            'customer_description.required' => 'O relato do cliente é obrigatório.',
         ]);
         $data['labor_cost'] = floatval($data['labor_cost'] ?? 0);
         $data['parts_cost'] = floatval($data['parts_cost'] ?? 0);
@@ -176,6 +178,8 @@ class ServiceOrderController extends Controller
             'entry_date'    => 'required|date',
             'delivery_date' => 'nullable|date',
             'status'        => 'required|string',
+        ], [
+            'customer_description.required' => 'O relato do cliente é obrigatório.',
         ]);
         $data['labor_cost'] = floatval($data['labor_cost'] ?? 0);
         $data['parts_cost'] = floatval($data['parts_cost'] ?? 0);

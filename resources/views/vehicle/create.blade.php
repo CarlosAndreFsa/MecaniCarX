@@ -14,21 +14,21 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         {{-- Cliente --}}
                         <div>
-                            <label for="customer_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Cliente Proprietário *</label>
+                            <label for="customer_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Cliente Proprietário <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span></label>
                             <select name="customer_id" id="customer_id" class="w-full" required placeholder="Digite o nome ou CPF para buscar..."></select>
                             @error('customer_id') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
                         </div>
 
                         {{-- Placa --}}
                         <div>
-                            <label for="plate" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Placa do Veículo *</label>
+                            <label for="plate" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Placa do Veículo <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span></label>
                             <input type="text" name="plate" id="plate" value="{{ old('plate') }}" placeholder="Ex: ABC-1234" class="w-full uppercase rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm" required>
                             @error('plate') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
                         </div>
 
                         {{-- Marca --}}
                         <div>
-                            <label for="brand_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Marca *</label>
+                            <label for="brand_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Marca <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span></label>
                             <select name="brand_id" id="brand_id" class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm" required>
                                 <option value="">Selecione a Marca...</option>
                                 @foreach($brands as $brand)
@@ -40,7 +40,7 @@
 
                         {{-- Modelo --}}
                         <div>
-                            <label for="model" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Modelo *</label>
+                            <label for="model" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Modelo <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span></label>
                             <input type="text" name="model" id="model" value="{{ old('model') }}" placeholder="Ex: Honda Civic X" class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm" required>
                             @error('model') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
                         </div>

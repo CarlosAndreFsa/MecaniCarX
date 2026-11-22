@@ -63,37 +63,37 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Razão Social /
+                        <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Razão Social /
                             Nome</p>
                         <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $customer->name }}</p>
                     </div>
 
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Nome Fantasia</p>
+                        <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Nome Fantasia</p>
                         <p class="text-base font-bold text-gray-800 dark:text-gray-200">
                             {{ $customer->name_fantasy ?? '—' }}</p>
                     </div>
 
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">CPF / CNPJ</p>
+                        <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">CPF / CNPJ</p>
                         <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $customer->cpf_cnpj ?? '—' }}
                         </p>
                     </div>
 
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Email</p>
+                        <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Email</p>
                         <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $customer->email ?? '—' }}
                         </p>
                     </div>
 
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Telefone</p>
+                        <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Telefone</p>
                         <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $customer->phone ?? '—' }}
                         </p>
                     </div>
 
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Website</p>
+                        <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Website</p>
                         <p class="text-base font-bold text-gray-800 dark:text-gray-200">
                             @if ($customer->website)
                                 <a href="{{ str_starts_with($customer->website, 'http') ? $customer->website : 'https://' . $customer->website }}"
@@ -124,34 +124,34 @@
                 @if ($customer->address && ($customer->address->street || $customer->address->city))
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="md:col-span-2">
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Logradouro
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Logradouro
                             </p>
                             <p class="text-base font-bold text-gray-800 dark:text-gray-200">
                                 {{ $customer->address->street }}, {{ $customer->address->number }}</p>
                         </div>
 
                         <div>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Bairro</p>
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Bairro</p>
                             <p class="text-base font-bold text-gray-800 dark:text-gray-200">
                                 {{ $customer->address->district ?? '—' }}</p>
                         </div>
 
                         <div>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Cidade /
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Cidade /
                                 Estado</p>
                             <p class="text-base font-bold text-gray-800 dark:text-gray-200">
                                 {{ $customer->address->city ?? '—' }} / {{ $customer->address->state ?? '—' }}</p>
                         </div>
 
                         <div>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">CEP</p>
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">CEP</p>
                             <p class="text-base font-bold text-gray-800 dark:text-gray-200">
                                 {{ $customer->address->zip_code ?? '—' }}</p>
                         </div>
 
                         @if ($customer->address->complement)
                             <div class="md:col-span-3 pt-4 border-t border-gray-100 dark:border-gray-700 mt-2">
-                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                                <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">
                                     Complemento</p>
                                 <p class="text-base font-medium text-gray-600 dark:text-gray-300 italic">
                                     {{ $customer->address->complement }}</p>

@@ -93,11 +93,11 @@
                 <div class="grid grid-cols-2 gap-4 text-center">
                     <div class="bg-gray-100 dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
                         <span class="block text-3xl font-bold text-orange-600">+500</span>
-                        <span class="text-sm text-gray-500">Clientes</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">Clientes</span>
                     </div>
                     <div class="bg-gray-100 dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
                         <span class="block text-3xl font-bold text-orange-600">100%</span>
-                        <span class="text-sm text-gray-500">Qualidade</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">Qualidade</span>
                     </div>
                 </div>
             </div>

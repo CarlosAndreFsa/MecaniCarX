@@ -53,7 +53,7 @@ new class extends Component
         {{-- Senha Atual --}}
         <div class="space-y-1">
             <label for="update_password_current_password" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
-                {{ __('Senha Atual') }} *
+                {{ __('Senha Atual') }} <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
             </label>
             <input wire:model="current_password" id="update_password_current_password" name="current_password" type="password" autocomplete="current-password"
                 class="w-full bg-gray-50 dark:bg-gray-900 border @error('current_password') border-red-500 @else border-gray-200 dark:border-gray-700 @enderror rounded-xl px-4 py-2.5 text-sm font-bold text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all" />
@@ -68,7 +68,7 @@ new class extends Component
         {{-- Nova Senha --}}
         <div class="space-y-1">
             <label for="update_password_password" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
-                {{ __('Nova Senha') }} *
+                {{ __('Nova Senha') }} <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
             </label>
             <input wire:model="password" id="update_password_password" name="password" type="password" autocomplete="new-password"
                 class="w-full bg-gray-50 dark:bg-gray-900 border @error('password') border-red-500 @else border-gray-200 dark:border-gray-700 @enderror rounded-xl px-4 py-2.5 text-sm font-bold text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all" />
@@ -83,7 +83,7 @@ new class extends Component
         {{-- Confirmar Nova Senha --}}
         <div class="space-y-1">
             <label for="update_password_password_confirmation" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
-                {{ __('Confirmar Nova Senha') }} *
+                {{ __('Confirmar Nova Senha') }} <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
             </label>
             <input wire:model="password_confirmation" id="update_password_password_confirmation" name="password_confirmation" type="password" autocomplete="new-password"
                 class="w-full bg-gray-50 dark:bg-gray-900 border @error('password_confirmation') border-red-500 @else border-gray-200 dark:border-gray-700 @enderror rounded-xl px-4 py-2.5 text-sm font-bold text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all" />

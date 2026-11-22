@@ -15,9 +15,20 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script>
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        </script>
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
+    <body class="font-sans text-gray-900 dark:text-gray-100 antialiased bg-gray-100 dark:bg-gray-950 transition-colors duration-300">
+        <button type="button" id="guest-theme-toggle" aria-label="Alternar modo escuro"
+            class="fixed top-4 right-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+            Alternar tema
+        </button>
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-950 transition-colors duration-300">
             <div>
                  <a href="{{ route('home') }}" wire:navigate>
                         <img src="{{ asset('assets/img/logo1.jpg') }}" alt="MecaniCarX" class="w-20 h-20 fill-current text-gray-500 h-12 w-auto">
@@ -28,9 +39,15 @@
                 </a> --}}
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-transparent dark:border-gray-800 shadow-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}
             </div>
         </div>
+        <script>
+            document.getElementById('guest-theme-toggle').addEventListener('click', function () {
+                document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            });
+        </script>
     </body>
 </html>

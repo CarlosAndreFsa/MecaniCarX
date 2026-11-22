@@ -43,7 +43,7 @@
             <nav class="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
                 {{-- Item Simples: Dashboard --}}
                 <a href="{{ route('painel') }}"
-                    class="flex items-center p-3 rounded-lg hover:bg-slate-800 transition group {{ request()->routeIs('painel') ? 'bg-slate-800 text-white' : '' }}">
+                    class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition group {{ request()->routeIs('painel') ? 'bg-gray-100 text-slate-900 dark:bg-slate-800 dark:text-white' : '' }}">
                     <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -54,7 +54,7 @@
                 {{-- Categoria Expansível: Cadastros --}}
                 <div x-data="{ open: false }">
                     <button @click="open = !open; sidebarOpen = true"
-                        class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-slate-800 transition group">
+                        class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition group">
                         <div class="flex items-center">
                             <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -69,19 +69,16 @@
                     </button>
                     <div x-show="open && sidebarOpen" x-cloak class="mt-1 ml-9 space-y-1">
                         @if (auth()->user()->role !== 'client')
-                            <a href="{{ route('customer.index') }}" class="block p-2 text-sm hover:text-white transition">Clientes</a>
-                            <a href="{{ route('users.index') }}" class="block p-2 text-sm hover:text-white transition">Funcionários</a>
+                            <a href="{{ route('customer.index') }}"
+                                class="block rounded-md p-2 text-sm text-slate-600 transition-colors hover:bg-gray-100 hover:text-orange-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-orange-300">Clientes</a>
+                            <a href="{{ route('users.index') }}"
+                                class="block rounded-md p-2 text-sm text-slate-600 transition-colors hover:bg-gray-100 hover:text-orange-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-orange-300">Funcionários</a>
                         @endif
-                        <a href="{{ route('vehicles.index') }}" class="block p-2 text-sm hover:text-white transition">Veículos</a>
-                        <a href="{{ route('customer.index') }}"
-                            class="block p-2 text-sm hover:text-white transition">Clientes</a>
-                        <a href="{{ route('users.index') }}"
-                            class="block p-2 text-sm hover:text-white transition">Funcionários</a>
                         <a href="{{ route('vehicles.index') }}"
-                            class="block p-2 text-sm hover:text-white transition">Veículos</a>
+                            class="block rounded-md p-2 text-sm text-slate-600 transition-colors hover:bg-gray-100 hover:text-orange-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-orange-300">Veículos</a>
                         @if (auth()->user()->role === 'super-admin')
                             <a href="{{ route('brands.index') }}"
-                                class="block p-2 text-sm hover:text-white transition">Marcas</a>
+                                class="block rounded-md p-2 text-sm text-slate-600 transition-colors hover:bg-gray-100 hover:text-orange-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-orange-300">Marcas</a>
                         @endif
                     </div>
                 </div>
@@ -89,7 +86,7 @@
                 {{-- Categoria Expansível: Oficina --}}
                 <div x-data="{ open: false }">
                     <button @click="open = !open; sidebarOpen = true"
-                        class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-slate-800 transition group">
+                        class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition group">
                         <div class="flex items-center">
                             <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -104,15 +101,15 @@
                     </button>
                     <div x-show="open && sidebarOpen" x-cloak class="mt-1 ml-9 space-y-1">
                         <a href="{{ route('service-orders.index') }}"
-                            class="block p-2 text-sm hover:text-white transition">Ordens de Serviço</a>
-                        <a href="#" class="block p-2 text-sm hover:text-white transition">Agendamentos</a>
+                            class="block rounded-md p-2 text-sm text-slate-600 transition-colors hover:bg-gray-100 hover:text-orange-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-orange-300">Ordens de Serviço</a>
+                        <a href="#" class="block rounded-md p-2 text-sm text-slate-600 transition-colors hover:bg-gray-100 hover:text-orange-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-orange-300">Agendamentos</a>
                     </div>
                 </div>
 
                 {{-- Categoria Expansível: Configurações --}}
                 <div x-data="{ open: false }">
                     <button @click="open = !open; sidebarOpen = true"
-                        class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-slate-800 transition group">
+                        class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition group">
                         <div class="flex items-center">
                             <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -127,9 +124,12 @@
                         </svg>
                     </button>
                     <div x-show="open && sidebarOpen" x-cloak class="mt-1 ml-9 space-y-1">
-                        <a href="{{ route('company.show') }}"
-                            class="block p-2 text-sm hover:text-white transition">Minha Empresa</a>
-                        <a href="{{ route('profile') }}" class="block p-2 text-sm hover:text-white transition">Meu
+                        @if (auth()->user()->role !== 'client')
+                            <a href="{{ route('company.show') }}"
+                                class="block rounded-md p-2 text-sm text-slate-600 transition-colors hover:bg-gray-100 hover:text-orange-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-orange-300">Minha Empresa</a>
+                        @endif
+                        <a href="{{ route('profile') }}"
+                            class="block rounded-md p-2 text-sm text-slate-600 transition-colors hover:bg-gray-100 hover:text-orange-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-orange-300">Meu
                             Perfil</a>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
 
             {{-- Botão de Minimizar --}}
             <button @click="sidebarOpen = !sidebarOpen"
-                class="p-4 bg-slate-950/30 hover:bg-slate-800 flex justify-center transition border-t border-slate-800">
+                class="p-4 bg-gray-50 dark:bg-slate-950/30 hover:bg-gray-100 dark:hover:bg-slate-800 flex justify-center transition border-t border-gray-200 dark:border-slate-800">
                 <svg :class="sidebarOpen ? '' : 'rotate-180'" class="w-5 h-5 transition-transform" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -95,7 +95,7 @@
                                             'client' => 'Cliente',
                                         ];
                                     @endphp
-                                    <span class="px-3 py-1 text-xs font-black rounded-full tracking-tighter uppercase {{ $roleColors[$user->role] ?? 'bg-gray-100 text-gray-700' }}">
+                                    <span class="px-3 py-1 text-xs font-black rounded-full tracking-tighter uppercase {{ $roleColors[$user->role] ?? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' }}">
                                         {{ $roleLabels[$user->role] ?? ucfirst($user->role) }}
                                     </span>
                                 </td>

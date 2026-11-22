@@ -93,27 +93,27 @@
                     </h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-8"> 
                         <div>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Cliente</p>
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Cliente</p>
                             <p class="text-base font-bold text-gray-800 dark:text-gray-200 truncate"> {{ $service_order->customer->name }} </p>
                         </div> 
 
                         <div>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Data Entrada</p>
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Data Entrada</p>
                             <p class="text-base text-gray-800 dark:text-gray-300 font-bold">
                                 {{ \Carbon\Carbon::parse($service_order->entry_date)->format('d/m/Y') }} 
                             </p>
                         </div>
 
                         <div>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Data Saída</p>
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Data Saída</p>
                             <p class="text-base text-gray-800 dark:text-gray-300 font-bold">
                                 {{ $service_order->delivery_date ? \Carbon\Carbon::parse($service_order->delivery_date)->format('d/m/Y') : '---' }} 
                             </p>
                         </div>
 
                         <div>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Status OS</p> 
-                            <span class="px-3 py-1 text-[10px] font-black rounded-lg uppercase inline-block {{ $statusClasses[$service_order->status] ?? 'bg-gray-100' }}"> 
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Status OS</p>
+                            <span class="px-3 py-1 text-[10px] font-black rounded-lg uppercase inline-block {{ $statusClasses[$service_order->status] ?? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' }}">
                                 {{ $statusLabels[$service_order->status] ?? $service_order->status }}
                             </span>
                         </div> 
@@ -123,7 +123,7 @@
                 {{-- CARD 2: TÍTULO E DETALHAMENTO --}} 
                 <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-2xl shadow-sm p-6 overflow-hidden">
                     <div class="mb-8">
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Título do Serviço</p>
+                        <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Título do Serviço</p>
                         <p class="text-2xl text-gray-800 dark:text-white font-black leading-tight"> {{ $service_order->title }} </p>
                     </div>
 
@@ -155,11 +155,11 @@
                     <h3 class="text-lg font-black text-gray-700 dark:text-gray-200 mb-6 uppercase tracking-tighter">Resumo Financeiro</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border dark:border-gray-700">
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Mão de Obra</p>
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Mão de Obra</p>
                             <p class="text-xl font-bold text-gray-800 dark:text-gray-200 font-mono"> R$ {{ number_format($service_order->labor_cost, 2, ',', '.') }} </p>
                         </div>
                         <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border dark:border-gray-700">
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Peças</p>
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Total Peças</p>
                             <p class="text-xl font-bold text-gray-800 dark:text-gray-200 font-mono"> R$ {{ number_format($service_order->parts_cost, 2, ',', '.') }} </p>
                         </div>
                         <div class="p-4 bg-orange-600 rounded-xl shadow-lg shadow-orange-600/30">

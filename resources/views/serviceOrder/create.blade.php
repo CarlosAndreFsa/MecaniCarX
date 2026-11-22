@@ -37,14 +37,14 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {{-- Cliente --}}
                                 <div>
-                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"> Cliente Proprietário * </label>
+                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"> Cliente Proprietário <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span> </label>
                                     <select name="customer_id" id="customer_id" class="w-full" required placeholder="Buscar por nome ou CPF..."></select>
                                     @error('customer_id') <p class="text-red-600 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
                                 </div>
 
                                 {{-- Veículo --}}
                                 <div id="vehicle-wrapper">
-                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"> Veículo * </label>
+                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"> Veículo <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span> </label>
                                     <div class="flex gap-2">
                                         <select name="vehicle_id" id="vehicle_id" 
                                                 class="flex-1 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 disabled:opacity-50 text-sm" 
@@ -65,7 +65,7 @@
 
                                 {{-- Título da OS --}}
                                 <div class="md:col-span-2">
-                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"> Título / Resumo do Serviço * </label>
+                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"> Título / Resumo do Serviço <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span> </label>
                                     <input type="text" name="title" value="{{ old('title') }}" placeholder="Ex: Revisão de 50.000km ou Troca de Embreagem" required
                                            class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 shadow-sm">
                                 </div>
@@ -80,9 +80,14 @@
                             </h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"> Relato do Cliente </label>
+                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                                        Relato do Cliente <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
+                                    </label>
                                     <textarea name="customer_description" rows="4" placeholder="O que o cliente relatou ao chegar..."
                                               class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-orange-500 text-gray-700 dark:text-gray-200 text-sm">{{ old('customer_description') }}</textarea>
+                                    @error('customer_description')
+                                        <p class="text-red-600 text-xs mt-1 font-bold" role="alert">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"> Diagnóstico / Observações </label>
@@ -97,7 +102,7 @@
                     <div class="space-y-6">
                         {{-- STATUS E DATAS --}}
                         <div class="bg-white dark:bg-gray-800 border rounded-2xl shadow-sm p-6 border-gray-100 dark:border-gray-700">
-                            <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Agendamento</h3>
+                            <h3 class="text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4">Agendamento</h3>
                             
                             <div class="space-y-4">
                                 <div>
@@ -126,7 +131,7 @@
 
                         {{-- FINANCEIRO --}}
                         <div class="bg-white dark:bg-gray-800 border rounded-2xl shadow-sm p-6 border-gray-100 dark:border-gray-700 border-l-4 border-l-orange-600">
-                            <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Custos Previstos</h3>
+                            <h3 class="text-sm font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4">Custos Previstos</h3>
                             
                             <div class="space-y-4">
                                 <div>

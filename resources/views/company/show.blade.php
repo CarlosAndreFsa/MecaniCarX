@@ -34,19 +34,19 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Nome Fantasia / Razão Social</p>
+                        <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Nome Fantasia / Razão Social</p>
                         <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $company->name ?? 'Não informado' }}</p>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">CNPJ / Documento</p>
+                        <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">CNPJ / Documento</p>
                         <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $company->cnpj ?? $company->cpf_cnpj ?? 'Não informado' }}</p>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">E-mail de Contato</p>
+                        <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">E-mail de Contato</p>
                         <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $company->email ?? 'Não informado' }}</p>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Telefone / WhatsApp</p>
+                        <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Telefone / WhatsApp</p>
                         <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $company->phone ?? 'Não informado' }}</p>
                     </div>
                 </div>
@@ -62,24 +62,24 @@
                 @if (isset($company->address) && ($company->address->street || $company->address->city))
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="md:col-span-2">
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Logradouro</p>
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Logradouro</p>
                             <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $company->address->street }}, {{ $company->address->number }}</p>
                         </div>
                         <div>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Bairro</p>
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Bairro</p>
                             <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $company->address->district ?? '—' }}</p>
                         </div>
                         <div>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Cidade / Estado</p>
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Cidade / Estado</p>
                             <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $company->address->city ?? '—' }} / {{ $company->address->state ?? '—' }}</p>
                         </div>
                         <div>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">CEP</p>
+                            <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">CEP</p>
                             <p class="text-base font-bold text-gray-800 dark:text-gray-200">{{ $company->address->zip_code ?? '—' }}</p>
                         </div>
                         @if($company->address->complement)
                             <div class="md:col-span-3 pt-4 border-t border-gray-100 dark:border-gray-700 mt-2">
-                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Complemento</p>
+                                <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Complemento</p>
                                 <p class="text-base font-medium text-gray-600 dark:text-gray-300 italic">{{ $company->address->complement }}</p>
                             </div>
                         @endif

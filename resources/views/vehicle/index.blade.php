@@ -72,7 +72,7 @@
                                         <div class="text-sm font-bold text-gray-900 dark:text-gray-100">
                                             {{ $vehicle->model }}
                                         </div>
-                                        <div class="text-xs text-gray-500">{{ $vehicle->brand->name ?? 'N/A' }}</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">{{ $vehicle->brand->name ?? 'N/A' }}</div>
                                     </td>
                                     <td class="p-4">
                                         <span
@@ -124,7 +124,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="p-10 text-center text-gray-500 italic">Nenhum veículo
+                                    <td colspan="3" class="p-10 text-center text-gray-500 dark:text-gray-400 italic">Nenhum veículo
                                         cadastrado.</td>
                                 </tr>
                             @endforelse
