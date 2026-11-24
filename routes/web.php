@@ -5,6 +5,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ServiceOrderController;
+use App\Http\Controllers\AccountReceivableController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use App\Models\Customer;
@@ -110,6 +111,18 @@ Route::middleware(['auth',
     ->name('service-orders.print');
 
 });
+
+Route::middleware(['auth', 'company', 'active', 'password.changed', 'role:admin,super-admin'])
+    ->prefix('accounts-receivable')
+    ->name('accounts-receivable.')
+    ->group(function () {
+        Route::get('/', [AccountReceivableController::class, 'index'])->name('index');
+        Route::get('/create', [AccountReceivableController::class, 'create'])->name('create');
+        Route::post('/', [AccountReceivableController::class, 'store'])->name('store');
+        Route::get('/{accounts_receivable}', [AccountReceivableController::class, 'show'])->name('show');
+        Route::post('/installments/{installment}/receive', [AccountReceivableController::class, 'receive'])->name('installments.receive');
+        Route::patch('/{accounts_receivable}/cancel', [AccountReceivableController::class, 'cancel'])->name('cancel');
+    });
 
 Route::middleware(['auth', 'password.changed', 'role:super-admin'])->group(function() {
     //BRAND (Acesso somente para Super Admin)

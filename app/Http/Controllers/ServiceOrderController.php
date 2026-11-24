@@ -7,6 +7,8 @@ use App\Models\ServiceOrder;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use App\Models\AccountReceivable;
 
 class ServiceOrderController extends Controller
 {
@@ -178,6 +180,11 @@ class ServiceOrderController extends Controller
             'entry_date'    => 'required|date',
             'delivery_date' => 'nullable|date',
             'status'        => 'required|string',
+            'generate_receivable' => 'nullable|boolean',
+            'payment_mode' => 'nullable|required_if:generate_receivable,1|in:immediate,installments',
+            'payment_method' => 'nullable|required_if:payment_mode,immediate|in:cash,pix,card',
+            'receivable_installments' => 'nullable|required_if:payment_mode,installments|integer|min:1|max:60',
+            'first_due_date' => 'nullable|required_if:payment_mode,installments|date',
         ], [
             'customer_description.required' => 'O relato do cliente é obrigatório.',
         ]);
@@ -185,7 +192,46 @@ class ServiceOrderController extends Controller
         $data['parts_cost'] = floatval($data['parts_cost'] ?? 0);
         $data['total'] = ($data['labor_cost'] ?? 0) + ($data['parts_cost'] ?? 0);
 
-        $service_order->update($data);
+        DB::transaction(function () use ($request, $data, $service_order) {
+            $statusBefore = $service_order->status;
+            $service_order->update($data);
+
+            if (
+                $statusBefore !== 'completed'
+                && $service_order->status === 'completed'
+                && $request->boolean('generate_receivable')
+                && ! $service_order->accountReceivable()->exists()
+                && (float) $service_order->total > 0
+            ) {
+                $account = AccountReceivable::create([
+                    'company_id' => $service_order->company_id,
+                    'customer_id' => $service_order->customer_id,
+                    'service_order_id' => $service_order->id,
+                    'description' => 'Ordem de Serviço ' . $service_order->number,
+                    'issue_date' => now()->toDateString(),
+                    'total' => $service_order->total,
+                    'status' => 'pending',
+                ]);
+
+                $count = $request->input('payment_mode') === 'installments'
+                    ? (int) $request->input('receivable_installments')
+                    : 1;
+                $immediate = $request->input('payment_mode') === 'immediate';
+                $firstDueDate = $request->input('payment_mode') === 'installments'
+                    ? $request->input('first_due_date')
+                    : now()->toDateString();
+
+                app(AccountReceivableController::class)->createInstallments(
+                    $account,
+                    $count,
+                    $firstDueDate,
+                    (float) $service_order->total,
+                    $immediate,
+                    $request->input('payment_method')
+                );
+                $account->refreshStatus();
+            }
+        });
 
         return redirect()
             ->route('service-orders.index')

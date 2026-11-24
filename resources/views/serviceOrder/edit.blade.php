@@ -147,6 +147,56 @@
                                            class="w-full bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800 font-black text-orange-600 rounded-xl text-right text-lg font-mono">
                                 </div>
                             </div>
+
+                            @if(in_array(auth()->user()->role, ['admin', 'super-admin']) && $service_order->status !== 'completed')
+                                <div id="receivable-options" class="bg-white dark:bg-gray-800 border rounded-2xl shadow-sm p-6 border-gray-100 dark:border-gray-700">
+                                    <h3 class="text-sm font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4">Conta a Receber</h3>
+
+                                    <label class="flex items-center gap-3 text-sm font-bold text-gray-700 dark:text-gray-300">
+                                        <input type="checkbox" name="generate_receivable" value="1"
+                                               {{ old('generate_receivable') ? 'checked' : '' }}
+                                               id="generate_receivable"
+                                               class="rounded border-gray-300 text-orange-600 focus:ring-orange-500">
+                                        Gerar ao concluir a OS
+                                    </label>
+
+                                    <div id="payment-options" class="mt-4 space-y-4 hidden">
+                                        <div>
+                                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Forma de recebimento</label>
+                                            <select name="payment_mode" id="payment_mode"
+                                                    class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl text-sm">
+                                                <option value="immediate" {{ old('payment_mode') === 'immediate' ? 'selected' : '' }}>Recebimento imediato</option>
+                                                <option value="installments" {{ old('payment_mode') === 'installments' ? 'selected' : '' }}>Parcelado</option>
+                                            </select>
+                                        </div>
+
+                                        <div id="immediate-method">
+                                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Método</label>
+                                            <select name="payment_method"
+                                                    class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl text-sm">
+                                                <option value="cash" {{ old('payment_method') === 'cash' ? 'selected' : '' }}>Espécie</option>
+                                                <option value="pix" {{ old('payment_method') === 'pix' ? 'selected' : '' }}>PIX</option>
+                                                <option value="card" {{ old('payment_method') === 'card' ? 'selected' : '' }}>Cartão</option>
+                                            </select>
+                                        </div>
+
+                                        <div id="installment-options" class="hidden grid grid-cols-2 gap-3">
+                                            <div>
+                                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Parcelas</label>
+                                                <input type="number" name="receivable_installments" min="1" max="60"
+                                                       value="{{ old('receivable_installments', 1) }}"
+                                                       class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl text-sm">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">1º vencimento</label>
+                                                <input type="date" name="first_due_date"
+                                                       value="{{ old('first_due_date', date('Y-m-d')) }}"
+                                                       class="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl text-sm">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -232,6 +282,29 @@
             // Carrega os veículos e já deixa o veículo da OS marcado
             loadVehicles(initialCustomerId, initialVehicleId);
         }
+
+        const generateReceivable = document.getElementById('generate_receivable');
+        const paymentOptions = document.getElementById('payment-options');
+        const paymentMode = document.getElementById('payment_mode');
+        const immediateMethod = document.getElementById('immediate-method');
+        const installmentOptions = document.getElementById('installment-options');
+
+        function toggleReceivableOptions() {
+            if (!generateReceivable || !paymentOptions) return;
+            paymentOptions.classList.toggle('hidden', !generateReceivable.checked);
+            togglePaymentMode();
+        }
+
+        function togglePaymentMode() {
+            if (!paymentMode) return;
+            const installments = paymentMode.value === 'installments';
+            immediateMethod?.classList.toggle('hidden', installments);
+            installmentOptions?.classList.toggle('hidden', !installments);
+        }
+
+        generateReceivable?.addEventListener('change', toggleReceivableOptions);
+        paymentMode?.addEventListener('change', togglePaymentMode);
+        toggleReceivableOptions();
     });
 </script>
 @endpush

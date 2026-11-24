@@ -49,9 +49,7 @@ class AccountReceivable extends Model
 
     public function refreshStatus(): void
     {
-        $totalPaid = (float) $this->installments()
-            ->where('status', 'paid')
-            ->sum('received_amount');
+        $totalPaid = (float) $this->installments()->sum('received_amount');
 
         $status = 'pending';
         if ((float) $this->total <= $totalPaid) {
