@@ -7,7 +7,10 @@ use App\Models\Customer;
 use App\Models\ReceivableInstallment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AccountReceivableController extends Controller
 {
@@ -15,7 +18,7 @@ class AccountReceivableController extends Controller
     {
         $query = AccountReceivable::query()
             ->with(['customer', 'serviceOrder', 'installments'])
-            ->where('company_id', $request->user()->company_id);
+            ->where('accounts_receivable.company_id', $request->user()->company_id);
 
         if ($request->filled('status')) {
             $query->where('status', $request->string('status'));
@@ -26,9 +29,151 @@ class AccountReceivableController extends Controller
             $query->whereHas('customer', fn ($q) => $q->where('name', 'like', "%{$search}%"));
         }
 
-        $accounts = $query->latest()->paginate(15)->withQueryString();
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', $request->integer('customer_id'));
+        }
 
-        return view('financial.accounts-receivable.index', compact('accounts'));
+        if ($request->filled('from')) {
+            $query->whereHas('installments', fn ($q) => $q->whereDate('due_date', '>=', $request->date('from')));
+        }
+
+        if ($request->filled('to')) {
+            $query->whereHas('installments', fn ($q) => $q->whereDate('due_date', '<=', $request->date('to')));
+        }
+
+        if ($request->filled('service_order')) {
+            $search = $request->service_order;
+            $query->whereHas('serviceOrder', fn ($q) => $q->where('number', 'like', "%{$search}%"));
+        }
+
+        $query->withMin('installments', 'due_date')
+            ->orderByRaw('COALESCE((SELECT MIN(due_date) FROM receivable_installments WHERE receivable_installments.account_receivable_id = accounts_receivable.id), issue_date) ASC');
+
+        $accounts = $query->paginate(15)->withQueryString();
+        $customers = Customer::where('company_id', $request->user()->company_id)
+            ->where('active', true)
+            ->orderBy('name')
+            ->get();
+        $groupBy = $request->string('group_by')->toString();
+
+        $groups = null;
+        if (in_array($groupBy, ['customer', 'service_order', 'due_date'], true)) {
+            $allAccounts = (clone $query)->get();
+            $groups = match ($groupBy) {
+                'customer' => $allAccounts->groupBy(fn ($account) => $account->customer->name),
+                'service_order' => $allAccounts->groupBy(fn ($account) => $account->serviceOrder
+                    ? 'OS #' . $account->serviceOrder->number
+                    : 'Cadastro direto'),
+                'due_date' => $allAccounts->groupBy(fn ($account) => $account->installments
+                    ->min('due_date')?->format('Y-m-d') ?? $account->issue_date->format('Y-m-d')),
+            };
+        }
+
+        return view('financial.accounts-receivable.index', compact('accounts', 'customers', 'groups', 'groupBy'));
+    }
+
+    private function filteredAccounts(Request $request)
+    {
+        $query = AccountReceivable::query()
+            ->with(['customer', 'serviceOrder', 'installments'])
+            ->where('company_id', $request->user()->company_id);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->string('status'));
+        }
+        if ($request->filled('search')) {
+            $query->whereHas('customer', fn ($q) => $q->where('name', 'like', '%' . $request->search . '%'));
+        }
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', $request->integer('customer_id'));
+        }
+        if ($request->filled('from')) {
+            $query->whereHas('installments', fn ($q) => $q->whereDate('due_date', '>=', $request->date('from')));
+        }
+        if ($request->filled('to')) {
+            $query->whereHas('installments', fn ($q) => $q->whereDate('due_date', '<=', $request->date('to')));
+        }
+        if ($request->filled('service_order')) {
+            $query->whereHas('serviceOrder', fn ($q) => $q->where('number', 'like', '%' . $request->service_order . '%'));
+        }
+
+        return $query
+            ->orderByRaw('COALESCE((SELECT MIN(due_date) FROM receivable_installments WHERE receivable_installments.account_receivable_id = accounts_receivable.id), issue_date) ASC')
+            ->get();
+    }
+
+    public function exportCsv(Request $request): StreamedResponse
+    {
+        $accounts = $this->filteredAccounts($request);
+
+        return response()->streamDownload(function () use ($accounts) {
+            $output = fopen('php://output', 'w');
+            fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            fputcsv($output, ['Conta', 'Cliente', 'OS', 'Descricao', 'Emissao', 'Vencimento', 'Valor', 'Recebido', 'Status']);
+
+            foreach ($accounts as $account) {
+                foreach ($account->installments as $installment) {
+                    fputcsv($output, [
+                        $account->id,
+                        $account->customer->name,
+                        $account->serviceOrder?->number ?? '',
+                        $account->description,
+                        $account->issue_date->format('d/m/Y'),
+                        $installment->due_date->format('d/m/Y'),
+                        number_format($installment->amount, 2, ',', '.'),
+                        number_format($installment->received_amount, 2, ',', '.'),
+                        $installment->status,
+                    ]);
+                }
+            }
+            fclose($output);
+        }, 'contas-a-receber.csv', [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $accounts = $this->filteredAccounts($request);
+        $html = view('financial.accounts-receivable.report', [
+            'accounts' => $accounts,
+            'title' => 'Relatório de Contas a Receber',
+        ])->render();
+
+        return Pdf::loadHTML($html)->setPaper('a4', 'portrait')
+            ->stream('contas-a-receber.pdf');
+    }
+
+    public function print(Request $request)
+    {
+        $accounts = $this->filteredAccounts($request);
+        $format = $request->string('format')->toString() === 'thermal' ? 'thermal' : 'a4';
+
+        return view('financial.accounts-receivable.report-print', compact('accounts', 'format'));
+    }
+
+    public function sendEmail(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|email',
+            'subject' => 'nullable|string|max:150',
+            'message' => 'nullable|string|max:2000',
+            'filters' => 'nullable|array',
+        ]);
+
+        $accounts = $this->filteredAccounts($request->merge($data['filters'] ?? []));
+        $pdf = Pdf::loadHTML(view('financial.accounts-receivable.report', [
+            'accounts' => $accounts,
+            'title' => 'Relatório de Contas a Receber',
+        ])->render())->output();
+
+        Mail::raw($data['message'] ?: 'Segue anexo o relatório de contas a receber.', function ($mail) use ($data, $pdf) {
+            $mail->to($data['email'])
+                ->subject($data['subject'] ?: 'Relatório de Contas a Receber')
+                ->attachData($pdf, 'contas-a-receber.pdf', ['mime' => 'application/pdf']);
+        });
+
+        return back()->with('success', 'Relatório enviado por e-mail.');
     }
 
     public function create(Request $request)

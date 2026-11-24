@@ -5,8 +5,36 @@
                 <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Conta a Receber #{{ $account->id }}</h2>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $account->description }}</p>
             </div>
-            <a href="{{ route('accounts-receivable.index') }}" class="px-5 py-2 border rounded-xl text-sm font-bold">Voltar</a>
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ route('accounts-receivable.index') }}" class="px-4 py-2 border rounded-xl text-sm font-bold">Voltar</a>
+                <a href="{{ route('accounts-receivable.export.pdf', ['customer_id' => $account->customer_id]) }}" target="_blank"
+                   class="px-4 py-2 border rounded-xl text-sm font-bold">PDF</a>
+                <button type="button" onclick="document.getElementById('email-report').classList.toggle('hidden')"
+                        class="px-4 py-2 border rounded-xl text-sm font-bold">Enviar e-mail</button>
+                @if($account->customer->phone)
+                    @php
+                        $phone = preg_replace('/\D/', '', $account->customer->phone);
+                        $phone = str_starts_with($phone, '55') ? $phone : '55' . $phone;
+                        $message = urlencode('Olá, ' . $account->customer->name . '. Confira o lançamento da conta #' . $account->id . '.');
+                    @endphp
+                    <a href="https://wa.me/{{ $phone }}?text={{ $message }}" target="_blank"
+                       class="px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-bold">WhatsApp</a>
+                @endif
+            </div>
         </div>
+
+        <form id="email-report" method="POST" action="{{ route('accounts-receivable.send-email') }}"
+              class="hidden bg-white dark:bg-gray-800 p-4 rounded-2xl border grid grid-cols-1 md:grid-cols-4 gap-3">
+            @csrf
+            <input type="hidden" name="filters[customer_id]" value="{{ $account->customer_id }}">
+            <input type="email" name="email" value="{{ $account->customer->email }}" placeholder="E-mail" required
+                   class="md:col-span-1 rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+            <input type="text" name="subject" value="Conta a receber #{{ $account->id }}"
+                   class="md:col-span-1 rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+            <input type="text" name="message" value="Segue o relatório da conta a receber."
+                   class="md:col-span-1 rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+            <button class="px-4 py-2 bg-orange-600 text-white rounded-xl font-bold">Enviar</button>
+        </form>
 
         @if(session('success'))
             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-r-xl">{{ session('success') }}</div>
@@ -28,7 +56,15 @@
             </div>
             <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border">
                 <p class="text-xs font-bold uppercase text-gray-500">Origem</p>
-                <p class="font-bold mt-1">{{ $account->serviceOrder ? 'OS #' . $account->serviceOrder->number : 'Cadastro direto' }}</p>
+                <p class="font-bold mt-1">
+                    @if($account->serviceOrder)
+                        <a href="{{ route('service-orders.show', $account->serviceOrder) }}" class="text-blue-600 underline">
+                            OS #{{ $account->serviceOrder->number }}
+                        </a>
+                    @else
+                        Cadastro direto
+                    @endif
+                </p>
             </div>
         </div>
 

@@ -119,6 +119,10 @@ Route::middleware(['auth', 'company', 'active', 'password.changed', 'role:admin,
         Route::get('/', [AccountReceivableController::class, 'index'])->name('index');
         Route::get('/create', [AccountReceivableController::class, 'create'])->name('create');
         Route::post('/', [AccountReceivableController::class, 'store'])->name('store');
+        Route::get('/export/csv', [AccountReceivableController::class, 'exportCsv'])->name('export.csv');
+        Route::get('/export/pdf', [AccountReceivableController::class, 'exportPdf'])->name('export.pdf');
+        Route::get('/print', [AccountReceivableController::class, 'print'])->name('print');
+        Route::post('/send-email', [AccountReceivableController::class, 'sendEmail'])->name('send-email');
         Route::get('/{accounts_receivable}', [AccountReceivableController::class, 'show'])->name('show');
         Route::post('/installments/{installment}/receive', [AccountReceivableController::class, 'receive'])->name('installments.receive');
         Route::patch('/{accounts_receivable}/cancel', [AccountReceivableController::class, 'cancel'])->name('cancel');

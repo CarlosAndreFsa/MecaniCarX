@@ -85,4 +85,58 @@ class AccountReceivableTest extends TestCase
             'received_amount' => 150,
         ]);
     }
+
+    #[Test]
+    public function admin_can_filter_and_group_accounts_by_customer(): void
+    {
+        $company = Company::factory()->create();
+        $admin = User::factory()->for($company)->create([
+            'role' => 'admin',
+            'active' => true,
+        ]);
+        $customer = Customer::factory()->for($company)->create(['name' => 'Cliente Agrupado']);
+
+        $this->actingAs($admin)->post(route('accounts-receivable.store'), [
+            'customer_id' => $customer->id,
+            'description' => 'Conta agrupada',
+            'issue_date' => '2026-11-23',
+            'total' => 100,
+            'installments_count' => 1,
+            'first_due_date' => '2026-12-10',
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('accounts-receivable.index', [
+            'customer_id' => $customer->id,
+            'group_by' => 'customer',
+        ]));
+
+        $response->assertOk();
+        $response->assertSee('Cliente Agrupado');
+        $response->assertSee('10/12/2026');
+    }
+
+    #[Test]
+    public function admin_can_export_accounts_as_csv(): void
+    {
+        $company = Company::factory()->create();
+        $admin = User::factory()->for($company)->create([
+            'role' => 'admin',
+            'active' => true,
+        ]);
+        $customer = Customer::factory()->for($company)->create();
+
+        $this->actingAs($admin)->post(route('accounts-receivable.store'), [
+            'customer_id' => $customer->id,
+            'description' => 'Conta CSV',
+            'issue_date' => '2026-11-23',
+            'total' => 90,
+            'installments_count' => 1,
+            'first_due_date' => '2026-12-01',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('accounts-receivable.export.csv'))
+            ->assertOk()
+            ->assertHeader('content-type', 'text/csv; charset=UTF-8');
+    }
 }
