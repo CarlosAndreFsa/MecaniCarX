@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AccountReceivable extends Model
 {
+    protected $table = 'accounts_receivable';
+
     protected $fillable = [
         'company_id',
         'customer_id',
