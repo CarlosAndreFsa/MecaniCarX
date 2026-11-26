@@ -106,6 +106,31 @@
                     </div>
                 </div>
 
+                @if (in_array(auth()->user()->role, ['admin', 'super-admin']))
+                    <div x-data="{ open: {{ request()->routeIs('accounts-receivable.*') ? 'true' : 'false' }} }">
+                        <button @click="open = !open; sidebarOpen = true"
+                            class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition group">
+                            <div class="flex items-center">
+                                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 3v18h18M8 16V9m4 7V5m4 11v-4" />
+                                </svg>
+                                <span x-show="sidebarOpen" class="ml-3 font-medium">Financeiro</span>
+                            </div>
+                            <svg x-show="sidebarOpen" :class="open ? 'rotate-180' : ''" class="w-4 h-4 transition-transform"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div x-show="open && sidebarOpen" x-cloak class="mt-1 ml-9 space-y-1">
+                            <a href="{{ route('accounts-receivable.index') }}"
+                                class="block rounded-md p-2 text-sm text-slate-600 transition-colors hover:bg-gray-100 hover:text-orange-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-orange-300 {{ request()->routeIs('accounts-receivable.*') ? 'text-orange-700 dark:text-orange-300' : '' }}">
+                                Contas a Receber
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
                 {{-- Categoria Expansível: Configurações --}}
                 <div x-data="{ open: false }">
                     <button @click="open = !open; sidebarOpen = true"

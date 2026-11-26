@@ -43,7 +43,7 @@
                        class="rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900">
                 <select name="status" class="rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900">
                     <option value="">Todos os status</option>
-                    @foreach(['pending' => 'Pendente', 'partially_paid' => 'Recebida parcialmente', 'paid' => 'Recebida', 'canceled' => 'Cancelada'] as $value => $label)
+                    @foreach(['open' => 'Em aberto (pendentes e parciais)', 'received' => 'Com recebimentos', 'paid' => 'Quitadas', 'canceled' => 'Canceladas'] as $value => $label)
                         <option value="{{ $value }}" {{ request('status') === $value ? 'selected' : '' }}>{{ $label }}</option>
                     @endforeach
                 </select>
@@ -69,8 +69,7 @@
                 </div>
             @endforeach
         @else
-            @include('financial.accounts-receivable.partials.table', ['accounts' => $accounts])
-            {{ $accounts->links() }}
+            @include('financial.accounts-receivable.partials.table', ['accounts' => $installments])
         @endif
     </div>
 </x-app-layout>

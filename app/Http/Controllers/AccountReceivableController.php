@@ -6,6 +6,7 @@ use App\Models\AccountReceivable;
 use App\Models\Customer;
 use App\Models\ReceivableInstallment;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
@@ -16,40 +17,7 @@ class AccountReceivableController extends Controller
 {
     public function index(Request $request)
     {
-        $query = AccountReceivable::query()
-            ->with(['customer', 'serviceOrder', 'installments'])
-            ->where('accounts_receivable.company_id', $request->user()->company_id);
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->string('status'));
-        }
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->whereHas('customer', fn ($q) => $q->where('name', 'like', "%{$search}%"));
-        }
-
-        if ($request->filled('customer_id')) {
-            $query->where('customer_id', $request->integer('customer_id'));
-        }
-
-        if ($request->filled('from')) {
-            $query->whereHas('installments', fn ($q) => $q->whereDate('due_date', '>=', $request->date('from')));
-        }
-
-        if ($request->filled('to')) {
-            $query->whereHas('installments', fn ($q) => $q->whereDate('due_date', '<=', $request->date('to')));
-        }
-
-        if ($request->filled('service_order')) {
-            $search = $request->service_order;
-            $query->whereHas('serviceOrder', fn ($q) => $q->where('number', 'like', "%{$search}%"));
-        }
-
-        $query->withMin('installments', 'due_date')
-            ->orderByRaw('COALESCE((SELECT MIN(due_date) FROM receivable_installments WHERE receivable_installments.account_receivable_id = accounts_receivable.id), issue_date) ASC');
-
-        $accounts = $query->paginate(15)->withQueryString();
+        $installments = $this->installmentQuery($request)->get();
         $customers = Customer::where('company_id', $request->user()->company_id)
             ->where('active', true)
             ->orderBy('name')
@@ -58,48 +26,116 @@ class AccountReceivableController extends Controller
 
         $groups = null;
         if (in_array($groupBy, ['customer', 'service_order', 'due_date'], true)) {
-            $allAccounts = (clone $query)->get();
             $groups = match ($groupBy) {
-                'customer' => $allAccounts->groupBy(fn ($account) => $account->customer->name),
-                'service_order' => $allAccounts->groupBy(fn ($account) => $account->serviceOrder
-                    ? 'OS #' . $account->serviceOrder->number
+                'customer' => $installments->groupBy(fn ($installment) => $installment->accountReceivable->customer->name),
+                'service_order' => $installments->groupBy(fn ($installment) => $installment->accountReceivable->serviceOrder
+                    ? 'OS #' . $installment->accountReceivable->serviceOrder->number
                     : 'Cadastro direto'),
-                'due_date' => $allAccounts->groupBy(fn ($account) => $account->installments
-                    ->min('due_date')?->format('Y-m-d') ?? $account->issue_date->format('Y-m-d')),
+                'due_date' => $installments->groupBy(fn ($installment) => $installment->due_date->format('Y-m-d')),
             };
         }
 
-        return view('financial.accounts-receivable.index', compact('accounts', 'customers', 'groups', 'groupBy'));
+        return view('financial.accounts-receivable.index', compact('installments', 'customers', 'groups', 'groupBy'));
     }
 
     private function filteredAccounts(Request $request)
+    {
+        return $this->accountQuery($request)->get();
+    }
+
+    private function installmentQuery(Request $request): Builder
+    {
+        $query = ReceivableInstallment::query()
+        ->with([
+            'accountReceivable.customer',
+            'accountReceivable.serviceOrder',
+            'accountReceivable.installments',
+        ])
+        ->whereHas('accountReceivable', fn ($q) => $q->where('company_id', $request->user()->company_id));
+
+        if ($request->input('status') === 'open') {
+        $query->where('status', 'pending');
+        } elseif ($request->input('status') === 'received') {
+        $query->where('received_amount', '>', 0);
+        } elseif ($request->input('status') === 'paid') {
+        $query->where('status', 'paid');
+        } elseif ($request->input('status') === 'canceled') {
+        $query->where('status', 'canceled');
+        }
+
+        if ($request->filled('from')) {
+        $query->whereDate('due_date', '>=', $request->input('from'));
+        }
+        if ($request->filled('to')) {
+        $query->whereDate('due_date', '<=', $request->input('to'));
+        }
+        if ($request->filled('customer_id')) {
+        $query->whereHas('accountReceivable', fn ($q) => $q->where('customer_id', $request->integer('customer_id')));
+        }
+        if ($request->filled('search')) {
+        $query->whereHas('accountReceivable.customer', fn ($q) => $q->where('name', 'like', '%' . $request->search . '%'));
+        }
+        if ($request->filled('service_order')) {
+        $query->whereHas('accountReceivable.serviceOrder', fn ($q) => $q->where('number', 'like', '%' . $request->service_order . '%'));
+        }
+
+        return $query
+        ->orderBy('due_date')
+        ->orderBy('account_receivable_id')
+        ->orderBy('number');
+    }
+
+    private function accountQuery(Request $request): Builder
     {
         $query = AccountReceivable::query()
             ->with(['customer', 'serviceOrder', 'installments'])
             ->where('company_id', $request->user()->company_id);
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->string('status'));
+        $status = $request->input('status');
+        if ($status === 'open') {
+            $query->whereIn('status', ['pending', 'partially_paid']);
+        } elseif ($status === 'received') {
+            $query->whereIn('status', ['partially_paid', 'paid']);
+        } elseif (in_array($status, ['pending', 'partially_paid', 'paid', 'canceled'], true)) {
+            $query->where('status', $status);
         }
+
         if ($request->filled('search')) {
             $query->whereHas('customer', fn ($q) => $q->where('name', 'like', '%' . $request->search . '%'));
         }
+
         if ($request->filled('customer_id')) {
             $query->where('customer_id', $request->integer('customer_id'));
         }
-        if ($request->filled('from')) {
-            $query->whereHas('installments', fn ($q) => $q->whereDate('due_date', '>=', $request->date('from')));
+
+        if ($request->filled('from') || $request->filled('to')) {
+            $query->whereHas('installments', function ($q) use ($request) {
+                if ($request->filled('from')) {
+                    $q->whereDate('due_date', '>=', $request->input('from'));
+                }
+                if ($request->filled('to')) {
+                    $q->whereDate('due_date', '<=', $request->input('to'));
+                }
+            });
         }
-        if ($request->filled('to')) {
-            $query->whereHas('installments', fn ($q) => $q->whereDate('due_date', '<=', $request->date('to')));
-        }
+
         if ($request->filled('service_order')) {
             $query->whereHas('serviceOrder', fn ($q) => $q->where('number', 'like', '%' . $request->service_order . '%'));
         }
 
         return $query
-            ->orderByRaw('COALESCE((SELECT MIN(due_date) FROM receivable_installments WHERE receivable_installments.account_receivable_id = accounts_receivable.id), issue_date) ASC')
-            ->get();
+            ->orderByRaw("
+                COALESCE(
+                    (SELECT MIN(due_date) FROM receivable_installments
+                     WHERE receivable_installments.account_receivable_id = accounts_receivable.id
+                       AND receivable_installments.status = 'pending'),
+                    (SELECT MIN(due_date) FROM receivable_installments
+                     WHERE receivable_installments.account_receivable_id = accounts_receivable.id
+                       AND receivable_installments.status = 'paid'),
+                    accounts_receivable.issue_date
+                ) ASC
+            ")
+            ->orderBy('accounts_receivable.id');
     }
 
     public function exportCsv(Request $request): StreamedResponse

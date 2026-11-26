@@ -26,10 +26,6 @@
                 Usuários
             </a>
 
-            <a href="{{ route('accounts-receivable.index') }}"
-               class="block px-3 py-2 rounded hover:bg-gray-700">
-                Contas a Receber
-            </a>
         @endif
 
         {{-- ADMIN + EMPLOYEE --}}
