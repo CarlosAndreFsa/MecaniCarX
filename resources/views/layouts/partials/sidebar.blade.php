@@ -11,7 +11,7 @@
         </a>
 
         {{-- ADMIN --}}
-        @if(auth()->user()->role === 'admin')
+        @if(in_array(auth()->user()->role, ['admin', 'super-admin']))
             <p class="mt-4 text-xs text-gray-400 uppercase">
                 Administração
             </p>
@@ -25,6 +25,7 @@
                class="block px-3 py-2 rounded hover:bg-gray-700">
                 Usuários
             </a>
+
         @endif
 
         {{-- ADMIN + EMPLOYEE --}}
